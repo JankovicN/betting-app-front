@@ -1,0 +1,316 @@
+@import url('https://fonts.googleapis.com/css2?family=Open+Sans:wght@300;600&family=Poppins:wght@200;400&display=swap');
+
+/* 
+    Abbreviation for naming classes
+    mar -> Margin
+    pad -> Padding
+    per -> Percent
+    px -> Pixels
+    f -> 5,  five
+    tyf -> 25, twenty five
+    fty -> 50, fifty
+*/
+:root {
+    --color-primary: #122e6a;
+    --color-primary-light: #4985e2;
+    --color-black: #1a1f29;
+    --color-gray: #435473;
+    --color-white: #fff;
+    --color-beige: #dad5c0;
+
+
+    --transition: all 400ms ease;
+
+    --container-width-lg: 75%;
+    --container-width-md: 86%;
+    --container-width-sm: 90%;
+
+    font-family: 'Poppins', sans-serif;
+
+}
+
+.bg_white {
+    background-color: var(--color-white) !important;
+}
+
+.unselectable-text {
+    user-select: none;
+}
+
+.text_center {
+    text-align: center;
+}
+
+div {
+
+    font-family: 'Poppins', sans-serif;
+}
+
+.title {
+    background: var(--color-primary);
+    color: var(--color-white);
+    width: 100%;
+    text-align: left;
+    font-family: 'Poppins', sans-serif;
+}
+
+.light_border {
+    border: 1px solid var(--color-gray);
+}
+
+.light_border_left {
+    border-right: 1px solid gainsboro;
+}
+
+
+.link {
+    color: var(--color-white);
+    text-decoration: none;
+}
+
+.link:hover {
+    color: var(--color-beige);
+    text-decoration: none;
+}
+
+.main_container {
+    padding-left: 150px;
+    padding-right: 150px;
+}
+
+.box_5_pad {
+    padding: 5%;
+}
+
+.default_padding_px {
+    padding: 5px;
+}
+
+.button {
+    width: 100%;
+    font-weight: 500;
+    border: none;
+    border-top: 1px solid var(--color-primary);
+    margin-bottom: 1px;
+    background-color: var(--color-primary-light);
+    color: var(--color-white);
+}
+
+.relative_position {
+    position: relative;
+}
+
+.button:hover {
+    background-color: var(--color-black);
+    color: var(--color-white);
+}
+
+.button_not_selected {
+    background-color: var(--color-gray);
+    color: var(--color-white);
+}
+
+.button_selected {
+    background-color: var(--color-primary-light);
+    color: var(--color-white);
+}
+
+.odd_button {
+    height: 90%;
+    width: 30%;
+    margin: auto;
+    padding: 10px;
+    border: 1px solid var(--color-primary);
+    background-color: var(--color-white);
+    color: var(--color-primary);
+}
+
+.odd_button:hover {
+    background-color: var(--color-black);
+    color: var(--color-white);
+}
+
+.odd_button_selected {
+    height: 90%;
+    width: 30%;
+    margin: auto;
+    padding: 10px;
+    border: 1px solid var(--color-primary-light);
+    background-color: var(--color-primary-light);
+    color: var(--color-white);
+}
+
+.invisble {
+    display: none;
+}
+
+.position_bottom {
+    position: absolute;
+    bottom: 0;
+    left: 0;
+}
+
+.resizableDiv {
+    min-height: 50vh;
+    /* Initial height */
+}
+
+.input_field {
+    border: none;
+    border-bottom: 2px solid gainsboro;
+    margin: auto;
+    width: 80%;
+}
+
+.input_field:focus {
+    outline: none;
+    border-bottom: 2px solid var(--color-gray);
+}
+
+.invalid_input {
+    border-bottom: 2px solid red;
+    background-color: #ffcccc;
+    color: red;
+}
+
+.custom_modal {
+    width: 60vw;
+    margin: auto;
+    margin-top: 20vh;
+}
+
+.custom-modal {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0, 0, 0, 0.5);
+    /* Semi-transparent background */
+    display: none;
+    /* Initially hidden */
+    align-items: center;
+    justify-content: center;
+    z-index: 1000;
+    /* Adjust the z-index as needed */
+}
+
+/* .show class to display the modal */
+.show {
+    display: block;
+    /* Display the modal when .show class is applied */
+}
+
+/* Close button styles */
+.close {
+    position: absolute;
+    top: 5px;
+    right: 5px;
+    font-size: 30px;
+    cursor: pointer;
+    color: #fff;
+    z-index: 1000;
+}
+
+.close_dark{
+    position: absolute;
+    top: 5px;
+    right: 5px;
+    font-size: 30px;
+    cursor: pointer;
+    color: var(--color-black);
+    z-index: 1000;}
+
+
+/* Modal content styles */
+.custom-modal .modal-content {
+    background-color: var(--color-primary);
+    padding: 20px;
+    border-radius: 8px;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.5);
+    max-width: 90%;
+    max-height: 80%;
+    overflow: auto;
+}
+
+.ticket-details {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.ticket-details-section {
+    border: 1px solid #ccc;
+    padding: 10px;
+    margin: 5px;
+    text-align: center;
+    flex: 1;
+    height: 100%;
+}
+
+.state-highlight {
+    color: #ff0000;
+    /* Change this to the color you prefer for the "State" section */
+    font-weight: bold;
+}
+
+
+.row_style {
+    --bs-gutter-x: 1.5rem;
+    --bs-gutter-y: 0;
+    display: flex;
+    flex-wrap: wrap;
+    margin-top: calc(var(--bs-gutter-y) * -1);
+    margin-right: calc(var(--bs-gutter-x) * -.5);
+    margin-left: calc(var(--bs-gutter-x) * -.5);
+}
+
+
+/*
+    PADDING AND MARGIN CLASSES
+*/
+
+/* 
+    Styling for small screens
+*/
+@media (max-width: 575px) {
+    .box_5_pad {
+        padding: 5px;
+    }
+
+    .main_container {
+        padding-left: 5vw;
+        padding-right: 5vw;
+    }
+}
+
+/* 
+    Styling for medium screens
+*/
+@media (min-width: 576px) and (max-width: 767px) {
+    .box_5_pad {
+        padding: 5px;
+    }
+
+    .main_container {
+        padding-left: 5vw;
+        padding-right: 5vw;
+    }
+}
+
+/* 
+    Styling for large screens
+*/
+@media (max-width: 768px) {
+
+    .light_border_left{
+        border-right: none;
+    }
+
+}
+
+input[type="number"]::-webkit-inner-spin-button,
+input[type="number"]::-webkit-outer-spin-button {
+    -webkit-appearance: none;
+    margin: 0;
+}

@@ -1,0 +1,24 @@
+.footer {
+    background: var(--color-primary);
+    color: var(--color-white);
+    height: 30vh;
+}
+
+
+@media (max-width: 575px) {
+    .row {
+        --bs-gutter-x: initial;
+        --bs-gutter-y: initial;
+        display: block;
+        flex-wrap: nowrap;
+        margin-top: 0;
+        margin-right: 0;
+        margin-left: 0;
+    }
+    .col-6{
+        width:0%;
+    }
+    .col-3{
+        width:100% !important;
+    }
+}

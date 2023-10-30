@@ -1,0 +1,39 @@
+
+.form_container{
+    margin-top:50%;
+}
+
+/* 
+    Styling for small screens
+*/
+@media (max-width: 575px) {
+    .auth_container {
+        width: 80%;
+        margin:auto;
+        height:100vh;
+    }
+
+}
+
+/* 
+    Styling for medium screens
+*/
+@media (min-width: 576px) and (max-width: 767px) {
+    .auth_container {
+        width: 80%;
+        margin:auto;
+        height:100vh;
+    }
+}
+
+/* 
+    Styling for large screens
+*/
+@media (min-width: 768px) {
+    .auth_container {
+        width: 500px;
+        margin:auto;
+        height:100vh;
+    }
+
+}
