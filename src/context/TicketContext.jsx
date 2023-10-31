@@ -10,7 +10,7 @@ const initialData = {
     ],
 };
 
-const TicketContext = createContext();
+const TicketContext = createContext(initialData);
 
 const TicketProvider = ({ children }) => {
     const [ticketData, dispatch] = useReducer(ticketDataReducer, initialData);

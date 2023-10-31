@@ -8,32 +8,32 @@
 //     bets: [
 //     ],
 // }
-const initialData = {
-    wager: 20,
-    totalOdd: 1,
-    totalWin: 0,
-    bets: [
-    ],
-};
+
 
 const ticketDataReducer = (state, action) => {
     switch (action.type) {
         case 'ADD_OR_UPDATE_BET':
             const { fixtureId, home, away, date, betGroupName, oddId, oddName, odd } = action.payload;
             const existingBetIndex = state.bets.findIndex((bet) => bet.fixtureId === fixtureId);
+            // Updated bets is set to current bets that are in ticket, it will be changed in the following
+            let currentTicketBets = state.bets;
+            let currentTotalOdds = state.totalOdd;
+            let currentWager = state.wager;
+            let currentTotalWin = state.totalWin;
 
             if (existingBetIndex !== -1) {
                 // If an element with the same fixtureId exists, update its fields
-                state.totalOdd = state.totalOdd * odd / state.bets[existingBetIndex].odd;
-                state.totalWin = state.wager * state.totalOdd;
-                state.bets[existingBetIndex].betGroupName = betGroupName;
-                state.bets[existingBetIndex].oddName = oddName;
-                state.bets[existingBetIndex].odd = odd;
+                let currentBet = currentTicketBets[existingBetIndex];
+                currentTotalOdds = currentTotalOdds * odd / currentBet.odd;
+                currentTotalWin = currentWager * currentTotalOdds;
+                currentBet.betGroupName = betGroupName;
+                currentBet.oddName = oddName;
+                currentBet.odd = odd;
             } else {
                 // If no element with the specified fixtureId exists, add the new element
-                state.totalOdd = state.totalOdd * odd;
-                state.totalWin = state.wager * state.totalOdd;
-                state.bets.push({
+                currentTotalOdds = currentTotalOdds * odd;
+                currentTotalWin = currentWager * currentTotalOdds;
+                currentTicketBets.push({
                     fixtureId,
                     home,
                     away,
@@ -45,56 +45,62 @@ const ticketDataReducer = (state, action) => {
                 });
             }
 
-            state.totalOdd.toFixed(2);
-            state.totalWin.toFixed(2);
-            return { ...state };
+
+            return {
+                ...state,
+                bets: currentTicketBets,
+                wager: currentWager,
+                totalWin: currentTotalWin,
+            };
 
         case 'REMOVE_BET':
             // Handle state updates for adding or updating a bet
             const { fixtureIdToRemove } = action.payload;
             // Use the filter method to create a new array without the element to be removed
-            const updatedBets = [];
-            let updatedTotalOdd = state.totalOdd;
-            for (let i = 0; i < state.bets.length; i++) {
-                const bet = state.bets[i];
+            currentTicketBets = [];
+            var updatedTicketBets = state.totalOdd;
+            currentTicketBets = state.bets;
+            currentTotalOdds = state.totalOdd;
+            for (let i = 0; i < currentTicketBets.length; i++) {
+                const bet = currentTicketBets[i];
                 if (bet.fixtureId === fixtureIdToRemove) {
                     // Skip this bet and update the totalOdd and totalWin
-                    updatedTotalOdd /= bet.odd;
+                    currentTotalOdds /= bet.odd;
                 } else {
                     // Include this bet in the updatedBets array
-                    updatedBets.push(bet);
+                    updatedTicketBets.push(bet);
                 }
             }
-            var updatedTotalWin = state.wager * updatedTotalOdd;
+            currentTotalWin = state.wager * currentTotalOdds;
             return {
                 ...state,
-                totalOdd: updatedTotalOdd.toFixed(2),
-                totalWin: updatedTotalWin.toFixed(2),
-                bets: updatedBets, // Set the state.bets to the updated array
+                totalOdd: currentTotalOdds,
+                totalWin: currentTotalWin,
+                bets: updatedTicketBets, // Set the state.bets to the updated array
             };
         case 'UPDATE_WAGER':
             const newWager = action.payload;
-            updatedTotalWin = newWager * state.totalOdd;
+            currentTotalWin = newWager * state.totalOdd;
 
             return {
                 ...state,
                 wager: newWager,
-                totalWin: updatedTotalWin.toFixed(2),
+                totalWin: currentTotalWin,
             };
         case 'PLAY_TICKET':
             return {
                 ...state,
-                totalWager:20,
+                totalWager: 20,
                 totalOdd: 1,
-                totalWin: '-',
-                bets: [], 
+                totalWin: 0,
+                bets: [],
             };
         case 'UPDATE_INVALID_WAGER':
-            updatedTotalWin = '-';
+            currentTotalWin = 0;
 
             return {
                 ...state,
-                totalWin: updatedTotalWin,
+                totalWin: currentTotalWin,
             };
         default:
             return state; // Return the current state if the action doesn't match any case

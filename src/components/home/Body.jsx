@@ -54,7 +54,7 @@ const Body = () => {
                 <div className="col-12 d-md-none" >
                 <TicketModal show={showTicketModal} onClose={handleCloseTicketModal} />
                 </div>
-                <div className={`col-12 col-md-6`}>
+                <div className={`col-12 col-md-6 min-vh-50`}>
                     <Fixtures />
                 </div>
                 <div className={`col-12 col-md-3 d-none d-md-block`}>

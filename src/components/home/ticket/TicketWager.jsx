@@ -52,7 +52,7 @@ const TicketWager = ({ totalOdds, totalWin }) => {
                     Total Odds:
                 </div>
                 <div className="col-6 text-end pe-3">
-                    {totalOdds}
+                    {totalOdds.toFixed(2)}
                 </div>
             </div>
             <div className="row">
@@ -60,7 +60,7 @@ const TicketWager = ({ totalOdds, totalWin }) => {
                     Total Win:
                 </div>
                 <div className="col-6 text-end pe-3">
-                    {totalWin}
+                    {totalWin.toFixed(2)}
                 </div>
             </div>
             <button className={`ps-3 pe-3 pt-2 pb-2 fs-4 mb-0 text-start  button `} onClick={() => playTicket()}>PLAY TICKET</button>
