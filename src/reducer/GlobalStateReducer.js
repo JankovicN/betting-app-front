@@ -10,7 +10,7 @@
 // }
 
 
-const ticketDataReducer = (state, action) => {
+const globalStateReducer = (state, action) => {
     switch (action.type) {
         case 'ADD_OR_UPDATE_BET':
             const { fixtureId, home, away, date, betGroupName, oddId, oddName, odd } = action.payload;
@@ -78,6 +78,7 @@ const ticketDataReducer = (state, action) => {
                 totalWin: currentTotalWin,
                 bets: updatedTicketBets, // Set the state.bets to the updated array
             };
+
         case 'UPDATE_WAGER':
             const newWager = action.payload;
             currentTotalWin = newWager * state.totalOdd;
@@ -87,6 +88,7 @@ const ticketDataReducer = (state, action) => {
                 wager: newWager,
                 totalWin: currentTotalWin,
             };
+
         case 'PLAY_TICKET':
             return {
                 ...state,
@@ -95,6 +97,7 @@ const ticketDataReducer = (state, action) => {
                 totalWin: 0,
                 bets: [],
             };
+
         case 'UPDATE_INVALID_WAGER':
             currentTotalWin = 0;
 
@@ -107,4 +110,4 @@ const ticketDataReducer = (state, action) => {
     }
 };
 
-export default ticketDataReducer;
+export default globalStateReducer;

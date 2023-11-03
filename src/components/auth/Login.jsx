@@ -1,12 +1,47 @@
 import classes from './Auth.module.css'
-import {  useNavigate } from 'react-router-dom';
+import { useNavigate } from 'react-router-dom';
+import { useState } from 'react';
+import AuthService from '../../service/AuthService';
+import PropTypes from 'prop-types';
 
-const Login = () => {
+const Login = ({setIsAuthenticated}) => {
   const navigate = useNavigate();
+  const [formData, setFormData] = useState({ username: '', password: '' });
 
-  const login = () => {
+  const handleInputChange = (e) => {
+    const { name, value } = e.target;
+    setFormData({ ...formData, [name]: value });
+  };
+
+  const onSuccessFunction = (data) => {
+    console.log("success: ");
+    console.log(data.data);
+    setIsAuthenticated(true);
     navigate('/');
-  }
+    console.log("redirecting: ");
+  };
+
+  const onErrorFunction = (error) => {
+    console.log("error: " + error);
+    // Handle the error appropriately. For example, you can set an error message state.
+  };
+
+  const loginAction = () => {
+    const { username, password } = formData;
+    AuthService.login(
+      username,
+      password,
+      (response) => {
+        // Handle success here
+        onSuccessFunction(response)
+      },
+      (error) => {
+        // Handle error here
+        onErrorFunction(error)
+        // You can set an error message state or display an error message to the user.
+      }
+    );
+  };
 
   const navRegister = () => {
     navigate('/register');
@@ -18,11 +53,13 @@ const Login = () => {
         <h3 className="fs-1 text_center">Sign In</h3>
 
         <div className="fs-4 mt-5">
-          <label>Email address</label>
+          <label>Usernanme</label>
           <input
-            type="email"
+            type="text"
             className="form-control fs-5 mt-1"
-            placeholder="Enter email"
+            name="username"
+            placeholder="Enter username"
+            onChange={handleInputChange}
           />
         </div>
         <div className="fs-4 mt-3">
@@ -30,11 +67,13 @@ const Login = () => {
           <input
             type="password"
             className="form-control fs-5 mt-1"
+            name="password"
             placeholder="Enter password"
+            onChange={handleInputChange}
           />
         </div>
         <div className="d-grid gap-2 mt-5">
-          <button type="submit" className="btn btn-primary" onClick={login}>
+          <button type="button" className="btn btn-primary" onClick={loginAction}>
             Submit
           </button>
         </div>
@@ -49,5 +88,11 @@ const Login = () => {
   )
 
 };
+
+Login.propTypes = {
+  setIsAuthenticated: PropTypes.func.isRequired,
+};
+
+
 
 export default Login;

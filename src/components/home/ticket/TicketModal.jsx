@@ -1,7 +1,7 @@
 import PropTypes from 'prop-types';
 import Ticket from "./Ticket";
 
-const TicketModal = ({ show, onClose })  => {
+const TicketModal = ({ show, onClose,ticketData, action })  => {
     return (
       <div className={`custom-modal ${show ? 'show' : ''}`}>
         <div className="modal-content bg_white mt-5 m-auto">
@@ -10,7 +10,7 @@ const TicketModal = ({ show, onClose })  => {
                         &times;
                     </span>
                 </div>
-          <Ticket/>
+          <Ticket action={action} ticketData={ticketData}/>
         </div>
       </div>
     );
@@ -19,6 +19,8 @@ const TicketModal = ({ show, onClose })  => {
   TicketModal.propTypes = {
     show: PropTypes.bool.isRequired,
     onClose: PropTypes.func.isRequired,
+    ticketData: PropTypes.object.isRequired,
+    action: PropTypes.func.isRequired,
 };
 
   export default TicketModal;

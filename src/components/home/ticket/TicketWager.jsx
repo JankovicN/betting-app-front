@@ -1,10 +1,8 @@
 import { useState } from 'react';
-import { useTicketContext } from '../../../context/TicketContext';
 import PropTypes from 'prop-types';
 
-const TicketWager = ({ totalOdds, totalWin }) => {
+const TicketWager = ({ totalOdds, totalWin, action }) => {
     const [inputValue, setInputValue] = useState(20);
-    const { dispatch } = useTicketContext();
 
     const handleInputChange = (e) => {
         const value = e.target.value;
@@ -14,10 +12,10 @@ const TicketWager = ({ totalOdds, totalWin }) => {
             setInputValue(value);
             e.target.classList.remove('invalid_input');
             // Dispatch an action to update the context
-            dispatch({ type: 'UPDATE_WAGER', payload: parseFloat(value) });
+            action({ type: 'UPDATE_WAGER', payload: parseFloat(value) });
         } else {
             setInputValue(value);
-            dispatch({ type: 'UPDATE_INVALID_WAGER' });
+            action({ type: 'UPDATE_INVALID_WAGER' });
             e.target.classList.add('invalid_input');
         }
     };
@@ -25,7 +23,7 @@ const TicketWager = ({ totalOdds, totalWin }) => {
     function playTicket() {
         console.log("Ticket is played");
 
-        dispatch({
+        action({
             type: 'PLAY_TICKET', // Specify the action type
             payload: {
             },
@@ -70,6 +68,7 @@ const TicketWager = ({ totalOdds, totalWin }) => {
 TicketWager.propTypes = {
     totalOdds: PropTypes.number.isRequired,
     totalWin: PropTypes.number.isRequired,
+    action: PropTypes.func.isRequired,
 };
 
 export default TicketWager;

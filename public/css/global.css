@@ -265,6 +265,14 @@ div {
     margin-left: calc(var(--bs-gutter-x) * -.5);
 }
 
+.centered_container {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    height: 100%;
+    color:var(--color-white);
+  }
+
 
 /*
     PADDING AND MARGIN CLASSES

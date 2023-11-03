@@ -1,5 +1,6 @@
 import Line from "../../common/Line";
 import Fixture from "./Fixture";
+import PropTypes from 'prop-types';
 
 
 const fixturesArray = [
@@ -157,7 +158,7 @@ const fixturesArray = [
     },
 ]
 
-const Fixtures = () => {
+const Fixtures = ({fixtureData, action}) => {
     return (
         <div className={` relative_position h-100`}>
             <div className="title default_padding_px ps-3 pe-3  pt-2 pb-2 fs-3  d-none d-md-block">
@@ -166,7 +167,7 @@ const Fixtures = () => {
             <div className="d-none d-md-block">
                 <Line />
             </div>
-            {fixturesArray.map(l => {
+            {fixtureData.map(l => {
                 return (
                     <div key={l.id} className="pb-2">
                         <div className="title default_padding_px ps-3 pe-3 pb-2 fs-4">
@@ -174,7 +175,7 @@ const Fixtures = () => {
                         </div>
                         {l.fixtures.map(f => {
                             return (
-                                <Fixture key={f.id} fixture={f} />
+                                <Fixture key={f.id} fixture={f} action={action}/>
                             )
                         })}
                     </div>
@@ -182,6 +183,11 @@ const Fixtures = () => {
             })}
         </div>
     );
+};
+
+Fixtures.propTypes = {
+    action: PropTypes.func.isRequired,
+    fixtureData: PropTypes.array.isRequired
 };
 
 export default Fixtures;

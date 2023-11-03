@@ -1,12 +1,11 @@
-import { useTicketContext } from "../../../context/TicketContext";
 import Line from "../../common/Line";
 import classes from "./Ticket.module.css";
 import TicketBet from "./TicketBet";
 import TicketWager from "./TicketWager";
+import PropTypes from 'prop-types';
 
-const Ticket = () => {
+const Ticket = ({ticketData, action}) => {
 
-    const { ticketData } = useTicketContext();
 
 
     return (
@@ -20,14 +19,19 @@ const Ticket = () => {
             <div className={`${classes.all_bets_container}`}>
                 {ticketData.bets.map(b => {
                     return (
-                        <TicketBet key={b.fixtureId + ' ' + b.odd} bet={b} />
+                        <TicketBet key={b.fixtureId + ' ' + b.odd} bet={b} action={action}/>
                     )
                 })}
             </div>
-            <TicketWager totalOdds={ticketData.totalOdd} totalWin={ticketData.totalWin} />
+            <TicketWager totalOdds={ticketData.totalOdd} totalWin={ticketData.totalWin} action={action}/>
 
         </div>
     );
+};
+
+Ticket.propTypes = {
+    action: PropTypes.func.isRequired,
+    ticketData: PropTypes.object.isRequired
 };
 
 export default Ticket;

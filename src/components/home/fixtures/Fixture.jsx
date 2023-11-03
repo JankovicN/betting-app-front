@@ -43,10 +43,7 @@ const betGroups = [
 ]
 
 
-const Fixture = ({ fixture }) => {
-
-
-    const { dispatch } = useTicketContext();
+const Fixture = ({ fixture, action }) => {
 
     var fixtureOdds = useRef([]);
 
@@ -57,7 +54,7 @@ const Fixture = ({ fixture }) => {
         if (selectedOdd !== null && selectedOdd.betGroup === betGroupId && selectedOdd.odd === oddId) {
             setSelectedGroup(null);
 
-            dispatch({
+            action({
                 type: 'REMOVE_BET', // Specify the action type
                 payload: {
                     fixtureIdToRemove: fixture.id,
@@ -68,13 +65,13 @@ const Fixture = ({ fixture }) => {
                 betGroup: betGroupId,
                 odd: oddId,
             });
-            dispatch({
+            action({
                 type: 'ADD_OR_UPDATE_BET', // Specify the action type
                 payload: {
                     fixtureId: fixture.id,
-                    home:fixture.home,
-                    away:fixture.away,
-                    date:fixture.date,
+                    home: fixture.home,
+                    away: fixture.away,
+                    date: fixture.date,
                     betGroupName: bgName,
                     oddId: oddId,
                     oddName: oddName,
@@ -113,7 +110,7 @@ const Fixture = ({ fixture }) => {
                     {fixture.date.split(' ')[1]}
                 </div>
                 <div className="col-11 fs-6 d-block d-md-none">
-                    {fixture.date.split(' ')[0] +" "+fixture.date.split(' ')[1]}
+                    {fixture.date.split(' ')[0] + " " + fixture.date.split(' ')[1]}
                 </div>
                 <div className="col-11 col-md-6  p-0 d-flex flex-wrap justify-content-evenly">
                     {fixture.betGroups[0].odds.map(o => {
@@ -121,7 +118,7 @@ const Fixture = ({ fixture }) => {
                         return (
                             <button key={o.id} className={`${selectedOdd !== null && selectedOdd.betGroup === betGroup.id && selectedOdd.odd === o.id
                                 ? 'odd_button_selected'
-                                : 'odd_button'} fs-6`} onClick={() => addOdd(betGroup.id, betGroup.name, o.id, o.name,o.odd)}>
+                                : 'odd_button'} fs-6`} onClick={() => addOdd(betGroup.id, betGroup.name, o.id, o.name, o.odd)}>
                                 {o.name}<br />{o.odd}
                             </button>
                         )
@@ -145,7 +142,7 @@ const Fixture = ({ fixture }) => {
                                     return (
                                         <button key={o.id} className={`${selectedOdd !== null && selectedOdd.betGroup === betGroup.id && selectedOdd.odd === o.id
                                             ? 'odd_button_selected'
-                                            : 'odd_button'} fs-7`} onClick={() => addOdd(betGroup.id, betGroup.name, o.id, o.name,o.odd)}>
+                                            : 'odd_button'} fs-7`} onClick={() => addOdd(betGroup.id, betGroup.name, o.id, o.name, o.odd)}>
                                             {o.name}<br />{o.odd}
                                         </button>
                                     )
@@ -161,6 +158,7 @@ const Fixture = ({ fixture }) => {
 
 Fixture.propTypes = {
     fixture: PropTypes.object.isRequired,
+    action: PropTypes.func.isRequired
 };
 
 export default Fixture;

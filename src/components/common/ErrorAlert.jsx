@@ -9,14 +9,22 @@ const ErrorAlert = ({ message, onClose }) => {
         const timer = setTimeout(() => {
             setShow(false);
             onClose();
-        }, 3000); 
+        }, 3000);
 
         return () => clearTimeout(timer);
     }, [onClose]);
 
+    const closeErrorMessage = () => {
+        setShow(false);
+        onClose();
+      };
+
     return (
         <Alert show={show} variant="danger">
             {message}
+            <button type="button" className="close" onClick={closeErrorMessage}>
+                <span aria-hidden="true">&times;</span>
+            </button>
         </Alert>
     );
 };
