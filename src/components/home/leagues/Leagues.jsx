@@ -2,33 +2,11 @@ import LeagueButton from "./LeagueButton";
 import classes from "./Leagues.module.css";
 import PropTypes from 'prop-types';
 import Line from "../../common/Line";
-import FixtureService from "../../../service/FixtureService";
-import { useEffect } from "react";
 import LeagueService from "../../../service/LeagueService";
 
 
-const Leagues = ({ action, allLeagues, selectedLeagues, showError }) => {
+const Leagues = ({ action, allLeagues, selectedLeagues }) => {
 
-    const onSuccess = (data) => {
-        action({
-            type: 'SET_LEAGUES',
-            payload: data
-        })
-        if (selectedLeagues.lenght === 0) {
-            action({
-                type: 'ADD_LEAGUE',
-                payload: data[0].id
-            })
-        }
-    }
-    const onError = (data) => {
-        console.log(data)
-        showError(data)
-    }
-
-    useEffect(() => {
-        LeagueService.getAllLeagues(onSuccess, onError);
-    }, []);
 
     const addLeagueAndFixtures = (data) => {
         action({
@@ -41,13 +19,17 @@ const Leagues = ({ action, allLeagues, selectedLeagues, showError }) => {
 
     // change the state of selected leagues, select it if not selected and vice versa
     const selectLeague = (id) => {
+        console.log(`Selected Leagues `)
+        console.log(selectedLeagues)
+        console.log(`Selected ID = ${id}`)
+        console.log(selectedLeagues)
         if (selectedLeagues.includes(id)) {
             action({
                 type: 'REMOVE_LEAGUE',
                 payload: id
             })
         } else {
-            FixtureService.getFixturesForLeague(id, addLeagueAndFixtures);
+            LeagueService.getFixturesForLeague(id, addLeagueAndFixtures);
         }
     };
 
@@ -64,12 +46,12 @@ const Leagues = ({ action, allLeagues, selectedLeagues, showError }) => {
 
             {allLeagues.length === 0 ? (
                 // Loading state
-                <div style="centered_container">
+                <div className="centered_container">
                     <p>Loading...</p>
                 </div>
             ) : (
                 <>
-                    {allLeagues.map(l => <LeagueButton key={l.id} league={l} updateLeagues={selectLeague} />)}
+                    {allLeagues.map(l => <LeagueButton key={l.id} league={l} updateLeagues={selectLeague} selectedLeagues={selectedLeagues} />)}
                 </>
             )}
 
@@ -80,8 +62,7 @@ const Leagues = ({ action, allLeagues, selectedLeagues, showError }) => {
 Leagues.propTypes = {
     action: PropTypes.func.isRequired,
     allLeagues: PropTypes.array.isRequired,
-    selectedLeagues: PropTypes.array.isRequired,
-    showError: PropTypes.func.isRequired
+    selectedLeagues: PropTypes.array.isRequired
 };
 
 export default Leagues;

@@ -4,7 +4,7 @@ import { useState } from 'react';
 import AuthService from '../../service/AuthService';
 import PropTypes from 'prop-types';
 
-const Login = ({setIsAuthenticated}) => {
+const Login = ({ setIsAuthenticated }) => {
   const navigate = useNavigate();
   const [formData, setFormData] = useState({ username: '', password: '' });
 
@@ -15,7 +15,7 @@ const Login = ({setIsAuthenticated}) => {
 
   const onSuccessFunction = (data) => {
     console.log("success: ");
-    console.log(data.data);
+    console.log(data);
     setIsAuthenticated(true);
     navigate('/');
     console.log("redirecting: ");

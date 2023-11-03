@@ -1,6 +1,5 @@
 import PropTypes from 'prop-types';
 import { useRef, useState } from 'react';
-import { useTicketContext } from '../../../context/TicketContext';
 
 const betGroups = [
     {

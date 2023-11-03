@@ -1,37 +1,23 @@
-import { useState, useEffect } from 'react';
-import Alert from 'react-bootstrap/Alert';
+import { useEffect } from 'react';
 import PropTypes from 'prop-types';
 
-const ErrorAlert = ({ message, onClose }) => {
-    const [show, setShow] = useState(true);
 
+const ErrorAlert = ({ error, removeError }) => {
     useEffect(() => {
         const timer = setTimeout(() => {
-            setShow(false);
-            onClose();
-        }, 3000);
+            removeError();
+        }, 3000); // Automatically remove the error message after 3 seconds
 
-        return () => clearTimeout(timer);
-    }, [onClose]);
+        return () => {
+            clearTimeout(timer);
+        };
+    }, [removeError]);
 
-    const closeErrorMessage = () => {
-        setShow(false);
-        onClose();
-      };
-
-    return (
-        <Alert show={show} variant="danger">
-            {message}
-            <button type="button" className="close" onClick={closeErrorMessage}>
-                <span aria-hidden="true">&times;</span>
-            </button>
-        </Alert>
-    );
+    return <div className="error">{error}</div>;
 };
 
 ErrorAlert.propTypes = {
-    message: PropTypes.string.isRequired,
-    onClose: PropTypes.func.isRequired,
+    error: PropTypes.string.isRequired,
+    removeError: PropTypes.func.isRequired
 };
-
 export default ErrorAlert;

@@ -12,6 +12,8 @@
 
 const globalStateReducer = (state, action) => {
     switch (action.type) {
+
+        // Ticket action cases
         case 'ADD_OR_UPDATE_BET':
             const { fixtureId, home, away, date, betGroupName, oddId, oddName, odd } = action.payload;
             const existingBetIndex = state.bets.findIndex((bet) => bet.fixtureId === fixtureId);
@@ -105,6 +107,37 @@ const globalStateReducer = (state, action) => {
                 ...state,
                 totalWin: currentTotalWin,
             };
+
+        // Fixutre action cases
+
+        case 'ADD_FIXTURES':
+
+            const { fixturesToAdd, selectedLeague } = action.payload;
+            let currentFixtures = state.fixtures;
+            let currentSelectedleagues = state.selectedLeagues;
+            currentFixtures.push(fixturesToAdd);
+            currentSelectedleagues.push(selectedLeague);
+            return {
+                ...state,
+                fixtures: currentFixtures,
+                selectedLeagues: currentSelectedleagues
+            };
+        case 'REMOVE_FIXTURES':
+
+            const { leagueId } = action.payload;
+            currentFixtures = state.fixtures;
+            currentSelectedleagues = state.selectedLeagues;
+            currentFixtures=currentFixtures.filter((league) => league.id !==leagueId);
+            currentSelectedleagues=currentSelectedleagues.filter((id) => id !==leagueId);
+            return {
+                ...state,
+                fixtures: currentFixtures,
+                selectedLeagues: currentSelectedleagues
+            };
+
+        // League action cases
+
+
         default:
             return state; // Return the current state if the action doesn't match any case
     }

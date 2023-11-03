@@ -2,7 +2,7 @@ import PropTypes from 'prop-types';
 import Leagues from "./Leagues";
 
 
-const LeaguesModal = ({ show, action, onClose, allLeagues, selectedLeagues, showError }) => {
+const LeaguesModal = ({ show, action, onClose, allLeagues, selectedLeagues }) => {
     return (
         <div className={`custom-modal  ${show ? 'show' : ''}`}>
             <div className="modal-content  m-auto mt-5 h-100">
@@ -11,7 +11,9 @@ const LeaguesModal = ({ show, action, onClose, allLeagues, selectedLeagues, show
                         &times;
                     </span>
                 </div>
-                <Leagues action={action} allLeagues={allLeagues} selectedLeagues={selectedLeagues} showError={showError} />
+                <Leagues action={action} allLeagues={allLeagues} selectedLeagues={selectedLeagues} 
+                
+                />
             </div>
         </div>
     );
@@ -23,7 +25,6 @@ LeaguesModal.propTypes = {
     selectedLeagues: PropTypes.array.isRequired,
     show: PropTypes.bool.isRequired,
     onClose: PropTypes.func.isRequired,
-    showError: PropTypes.func.isRequired,
 };
 
 export default LeaguesModal;
