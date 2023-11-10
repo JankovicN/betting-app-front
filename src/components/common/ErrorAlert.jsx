@@ -13,7 +13,7 @@ const ErrorAlert = ({ error, removeError }) => {
         };
     }, [removeError]);
 
-    return <div className="error">{error}</div>;
+    return <div className="error alert alert-danger" role="alert">{error}</div>;
 };
 
 ErrorAlert.propTypes = {

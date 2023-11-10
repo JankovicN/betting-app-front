@@ -4,9 +4,15 @@ import TicketBet from "./TicketBet";
 import TicketWager from "./TicketWager";
 import PropTypes from 'prop-types';
 
-const Ticket = ({ticketData, action}) => {
+const Ticket = ({ ticketData, action, onError }) => {
 
-
+    const removeAllBets = () => {
+        action({
+            type: 'RESET_TICKET', // Specify the action type
+            payload: {
+            },
+        });
+    }
 
     return (
         <div className={`light_border  resizableDiv`}>
@@ -16,14 +22,16 @@ const Ticket = ({ticketData, action}) => {
             <div className=" d-none d-md-block">
                 <Line />
             </div>
+
+            <button className={`p-1 fs-5 m-auto text-center  ${classes.remove_bets_button} `} onClick={() => removeAllBets()}>REMOVE ALL BETS</button>
             <div className={`${classes.all_bets_container}`}>
                 {ticketData.bets.map(b => {
                     return (
-                        <TicketBet key={b.fixtureId + ' ' + b.odd} bet={b} action={action}/>
+                        <TicketBet key={b.fixtureId + ' ' + b.odd} bet={b} action={action} />
                     )
                 })}
             </div>
-            <TicketWager totalOdds={ticketData.totalOdd} totalWin={ticketData.totalWin} action={action}/>
+            <TicketWager ticketData={ticketData} action={action} onError={onError} />
 
         </div>
     );
@@ -31,6 +39,7 @@ const Ticket = ({ticketData, action}) => {
 
 Ticket.propTypes = {
     action: PropTypes.func.isRequired,
+    onError: PropTypes.func.isRequired,
     ticketData: PropTypes.object.isRequired
 };
 

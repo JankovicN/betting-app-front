@@ -13,16 +13,16 @@ const App = () => {
   return (
     <Router>
       <Routes>
-        <Route 
-          path='/login' 
-          element={<Login setIsAuthenticated={setIsAuthenticated}/>} />
+        <Route
+          path='/login'
+          element={<Login setIsAuthenticated={setIsAuthenticated} />} />
         <Route path='/register' element={<Register />} />
         <Route
           path='/'
-          element={authenticated ? <HomePage /> : <Navigate to="/login" />} />
-        <Route 
-          path='/user' 
-          element={authenticated? <UserPage /> : <Navigate to="/login" />} />
+          element={authenticated ? <HomePage setIsAuthenticated={setIsAuthenticated}/> : <Navigate to="/login" />} />
+        <Route
+          path='/user'
+          element={authenticated ? <UserPage setIsAuthenticated={setIsAuthenticated}/> : <Navigate to="/login" />} />
       </Routes>
     </Router>
   );

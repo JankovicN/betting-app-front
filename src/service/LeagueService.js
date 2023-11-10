@@ -1,35 +1,27 @@
 import api from '../util/api';
 
-const getAllLeagues = ( onSuccess, onError) => {
+const getAllLeagues = (onSuccess, onError) => {
+    console.log("=====================================================")
+    console.log(`Fething all Leagues!`)
     api.get('/league/get/all')
         .then((response) => {
-            console.log(response)
-            if (response.data.errorMessages && response.data.errorMessages.length !== 0) {
-                onError(response);
-            } else {
-                onSuccess(response.data.data);
-            }
+            console.log(response);
+            onSuccess(response);
         })
         .catch((error) => {
-            console.log("Unknown error:")
-            console.log(error)
             onError(error);
         });
 };
 
 const getFixturesForLeague = (leagueId, onSuccess, onError) => {
-    console.log(`Fething fixtures for league id ${leagueId}`)
+    console.log("=====================================================")
+    console.log(`Fething fixtures for league id ${leagueId}!`)
     api.get(`/league/ns/${leagueId}`)
         .then((response) => {
-            console.log(response)
-            if (response.data.errorMessages && response.data.errorMessages.length !== 0) {
-                console.log(response);
-            } else {
-                onSuccess(response.data.data);
-            }
+            console.log(response);
+            onSuccess(response);
         })
         .catch((error) => {
-            console.log(error)
             onError(error)
         });
 };

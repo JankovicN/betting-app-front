@@ -1,22 +1,19 @@
 import api from '../util/api';
 
-const getAllLeagues = ( onSuccess, onError) => {
-    api.post('/league/get/all')
+const playTicket = (ticket, onSuccess, onError) => {
+    console.log("=====================================================")
+    console.log("Playing ticket:")
+    console.log(ticket)
+    api.post('/ticket/new', ticket)
         .then((response) => {
             console.log(response)
-            if (response.data.errorMessages && response.data.errorMessages.length !== 0) {
-                onError(response);
-            } else {
-                onSuccess(response.data.data);
-            }
+            onSuccess();
         })
         .catch((error) => {
-            console.log("Unknown error:")
-            console.log(error)
             onError(error);
         });
 };
 
 export default {
-    getAllLeagues
+    playTicket
 };

@@ -8,7 +8,6 @@ const LeagueButton = ({ league, updateLeagues, selectedLeagues }) => {
 
 
     const selectLeague = () => {
-        { console.log(`Selecting League ${league.name}, id = ${league.id}`) }
         updateLeagues(league.id);
         if (clickButtonCssClass === "button_not_selected") {
             // Add the league to selectedLeagues if selected is true

@@ -1,58 +1,15 @@
 import PropTypes from 'prop-types';
 import { useRef, useState } from 'react';
-
-const betGroups = [
-    {
-        id: 1,
-        name: "Match Winner",
-        odds: [
-            {
-                id: 1,
-                name: "Home",
-                odd: 1.8
-            },
-            {
-                id: 2,
-                name: "Draw",
-                odd: 2.0
-            },
-            {
-                id: 3,
-                name: "Away",
-                odd: 2.2
-            }
-        ]
-    },
-    {
-        id: 2,
-        name: "Match Winner",
-        odds: [
-            {
-                id: 1,
-                name: "Home",
-                odd: 1.8
-            },
-            {
-                id: 2,
-                name: "Draw",
-                odd: 2.0
-            }
-        ]
-    }
-]
+import BetGroupService from '../../../service/BetGroupService';
 
 
-const Fixture = ({ fixture, action }) => {
+const Fixture = ({ fixture, action, ticket, onError }) => {
 
     var fixtureOdds = useRef([]);
-
-    const [selectedOdd, setSelectedGroup] = useState(null);
     const [dontShowOdds, setShowOdds] = useState(true);
 
-    const addOdd = (betGroupId, bgName, oddId, oddName, oddValue) => {
-        if (selectedOdd !== null && selectedOdd.betGroup === betGroupId && selectedOdd.odd === oddId) {
-            setSelectedGroup(null);
-
+    const addOdd = (betGroup, odd) => {
+        if (checkIfSelected(betGroup.id, odd.id)) {
             action({
                 type: 'REMOVE_BET', // Specify the action type
                 payload: {
@@ -60,10 +17,6 @@ const Fixture = ({ fixture, action }) => {
                 },
             });
         } else {
-            setSelectedGroup({
-                betGroup: betGroupId,
-                odd: oddId,
-            });
             action({
                 type: 'ADD_OR_UPDATE_BET', // Specify the action type
                 payload: {
@@ -71,24 +24,36 @@ const Fixture = ({ fixture, action }) => {
                     home: fixture.home,
                     away: fixture.away,
                     date: fixture.date,
-                    betGroupName: bgName,
-                    oddId: oddId,
-                    oddName: oddName,
-                    odd: oddValue,
+                    betGroupName: betGroup.name,
+                    betGroupId: betGroup.id,
+                    oddId: odd.id,
+                    oddName: odd.name,
+                    odd: odd.odd,
                 },
             });
         }
-
     };
+
+    const onSuccess = (data) => {
+        fixtureOdds.current = data
+        setShowOdds(false)
+    }
 
     const showAllOdds = (fixtureId) => {
-        if (fixtureOdds.current.length === 0) {
-            console.log('getting odds for fixture ' + { fixtureId });
-            fixtureOdds.current = betGroups;
+        if (fixtureOdds.current !== undefined && fixtureOdds.current.length === 0) {
+            console.log(`Getting ALL odds for Fixutre ${fixtureId}`);
+            BetGroupService.getAllOddsForFixture(fixtureId, onSuccess, onError);
+        }else{
+            const showingOdds = dontShowOdds;
+            setShowOdds(!showingOdds)
         }
-        setShowOdds(!dontShowOdds);
-    };
+    }
 
+    const checkIfSelected = (betGroupId, oddId) => {
+        return ticket.bets.some((bet) => bet.fixtureId === fixture.id &&
+            bet.betGroupId === betGroupId &&
+            bet.oddId === oddId)
+    }
 
     return (
         <>
@@ -112,19 +77,22 @@ const Fixture = ({ fixture, action }) => {
                     {fixture.date.split(' ')[0] + " " + fixture.date.split(' ')[1]}
                 </div>
                 <div className="col-11 col-md-6  p-0 d-flex flex-wrap justify-content-evenly">
-                    {fixture.betGroups[0].odds.map(o => {
-                        var betGroup = fixture.betGroups[0];
+                    {fixture.betGroupList[0].odds.map(odd => {
+                        var betGroup = fixture.betGroupList[0];
                         return (
-                            <button key={o.id} className={`${selectedOdd !== null && selectedOdd.betGroup === betGroup.id && selectedOdd.odd === o.id
-                                ? 'odd_button_selected'
-                                : 'odd_button'} fs-6`} onClick={() => addOdd(betGroup.id, betGroup.name, o.id, o.name, o.odd)}>
-                                {o.name}<br />{o.odd}
+                            <button
+                                className={`${checkIfSelected(betGroup.id, odd.id) ? 'odd_button_selected' : 'odd_button'} fs-6`}
+                                onClick={() => addOdd(betGroup, odd)}
+                                key={odd.id}>
+                                {odd.name}<br />{odd.odd}
                             </button>
                         )
                     })}
                 </div>
                 <div className="col-1  p-0">
-                    <button className=" h-100 w-100 p-0 fs-3 fw-bold border-0 border-md-start m-auto button" onClick={() => showAllOdds(fixture.id)}>
+                    <button
+                        className=" h-100 w-100 p-0 fs-3 fw-bold border-0 border-md-start m-auto button"
+                        onClick={() => showAllOdds(fixture.id)}>
                         +
                     </button>
                 </div>
@@ -134,15 +102,18 @@ const Fixture = ({ fixture, action }) => {
                     return (
                         <div key={bg.id} className="w-100 border-bottom">
                             {console.log('getting odds for fixture ' + bg.name)}
+
                             <h1 className='p-3 fs-4 '>{bg.name}</h1>
+
                             <div className=' mb-3 d-flex flex-wrap justify-content-evenly'>
-                                {bg.odds.map(o => {
-                                    var betGroup = fixture.betGroups[0];
+                                {bg.odds.map(odd => {
+                                    var betGroup = bg;
                                     return (
-                                        <button key={o.id} className={`${selectedOdd !== null && selectedOdd.betGroup === betGroup.id && selectedOdd.odd === o.id
-                                            ? 'odd_button_selected'
-                                            : 'odd_button'} fs-7`} onClick={() => addOdd(betGroup.id, betGroup.name, o.id, o.name, o.odd)}>
-                                            {o.name}<br />{o.odd}
+                                        <button
+                                            key={odd.id}
+                                            className={`${checkIfSelected(betGroup.id, odd.id) ? 'odd_button_selected' : 'odd_button'} fs-7 mb-1`}
+                                            onClick={() => addOdd(betGroup, odd)}>
+                                            {odd.name}<br /><span className='fw-bold'>{odd.odd}</span>
                                         </button>
                                     )
                                 })}
@@ -157,7 +128,9 @@ const Fixture = ({ fixture, action }) => {
 
 Fixture.propTypes = {
     fixture: PropTypes.object.isRequired,
-    action: PropTypes.func.isRequired
+    ticket: PropTypes.object.isRequired,
+    action: PropTypes.func.isRequired,
+    onError: PropTypes.func.isRequired,
 };
 
 export default Fixture;

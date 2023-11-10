@@ -1,7 +1,9 @@
 import { useState } from 'react';
 import PropTypes from 'prop-types';
+import Cookies from 'js-cookie';
+import TicketService from '../../../service/TicketService';
 
-const TicketWager = ({ totalOdds, totalWin, action }) => {
+const TicketWager = ({ ticketData, action, onError }) => {
     const [inputValue, setInputValue] = useState(20);
 
     const handleInputChange = (e) => {
@@ -20,14 +22,41 @@ const TicketWager = ({ totalOdds, totalWin, action }) => {
         }
     };
 
-    function playTicket() {
-        console.log("Ticket is played");
-
+    const onPlayedTicket = () => {
         action({
-            type: 'PLAY_TICKET', // Specify the action type
+            type: 'RESET_TICKET', // Specify the action type
             payload: {
             },
         });
+    }
+
+    function playTicket() {
+        console.log("Wager Amount")
+        console.log(inputValue)
+        if (inputValue < 20 || inputValue > 100000) {
+            onError({ response: { data: { errorMessages: ["Wager must be more than 20 and less than 100,000!"] } } });
+        }else if (ticketData.bets == undefined || ticketData.bets.length < 1) {
+            onError({ response: { data: { errorMessages: ["Ticket must contain at least one bet!"] } } });
+        } else {
+            const username = Cookies.get('username');
+            if (username) {
+                const currentTicketData = ticketData;
+                const oddIdArray = currentTicketData.bets.map((bet) => {
+                    return { oddId: bet.oddId };
+                });
+                const currentTicket = {
+                    wager: currentTicketData.wager,
+                    totalOdd: currentTicketData.totalOdd,
+                    totalWin: currentTicketData.totalWin,
+                    username: username,
+                    bets: oddIdArray,
+                };
+                TicketService.playTicket(currentTicket, onPlayedTicket, onError);
+
+            } else {
+                console.log('User is not logged in!')
+            }
+        }
     }
 
     return (
@@ -37,12 +66,12 @@ const TicketWager = ({ totalOdds, totalWin, action }) => {
                     Wager:
                 </div>
                 <div className="col-6 text-end pe-3">
-                <input
-                    type="number"
-                    value={inputValue}
-                    onChange={handleInputChange}
-                    className="input_field text-end"
-                />
+                    <input
+                        type="number"
+                        value={inputValue}
+                        onChange={handleInputChange}
+                        className="input_field text-end"
+                    />
                 </div>
             </div>
             <div className="row ">
@@ -50,7 +79,7 @@ const TicketWager = ({ totalOdds, totalWin, action }) => {
                     Total Odds:
                 </div>
                 <div className="col-6 text-end pe-3">
-                    {totalOdds.toFixed(2)}
+                    {ticketData.totalOdd.toFixed(2)}
                 </div>
             </div>
             <div className="row">
@@ -58,7 +87,7 @@ const TicketWager = ({ totalOdds, totalWin, action }) => {
                     Total Win:
                 </div>
                 <div className="col-6 text-end pe-3">
-                    {totalWin.toFixed(2)}
+                    {ticketData.totalWin.toFixed(2)}
                 </div>
             </div>
             <button className={`ps-3 pe-3 pt-2 pb-2 fs-4 mb-0 text-start  button `} onClick={() => playTicket()}>PLAY TICKET</button>
@@ -66,9 +95,9 @@ const TicketWager = ({ totalOdds, totalWin, action }) => {
     );
 };
 TicketWager.propTypes = {
-    totalOdds: PropTypes.number.isRequired,
-    totalWin: PropTypes.number.isRequired,
+    ticketData: PropTypes.object.isRequired,
     action: PropTypes.func.isRequired,
+    onError: PropTypes.func.isRequired,
 };
 
 export default TicketWager;

@@ -5,31 +5,37 @@ import Line from "../../common/Line";
 import LeagueService from "../../../service/LeagueService";
 
 
-const Leagues = ({ action, allLeagues, selectedLeagues }) => {
+const Leagues = ({ action, allLeagues, selectedLeagues, onError }) => {
 
 
     const addLeagueAndFixtures = (data) => {
         action({
-            type: 'ADD_LEAGUE',
+            type: 'ADD_FIXTURES',
             payload: {
-                data
+                fixturesToAdd: data
+            }
+        })
+        action({
+            type: 'ADD_SELECTED_LEAGUE',
+            payload: {
+                selectedLeague: data.id
             }
         })
     }
 
     // change the state of selected leagues, select it if not selected and vice versa
-    const selectLeague = (id) => {
-        console.log(`Selected Leagues `)
-        console.log(selectedLeagues)
-        console.log(`Selected ID = ${id}`)
-        console.log(selectedLeagues)
-        if (selectedLeagues.includes(id)) {
+    const selectLeague = (leagueId) => {
+        if (selectedLeagues.includes(leagueId)) {
             action({
-                type: 'REMOVE_LEAGUE',
-                payload: id
+                type: 'REMOVE_FIXTURES',
+                payload: { leagueId }
+            })
+            action({
+                type: 'REMOVE_SELECTED_LEAGUE',
+                payload: { leagueId }
             })
         } else {
-            LeagueService.getFixturesForLeague(id, addLeagueAndFixtures);
+            LeagueService.getFixturesForLeague(leagueId, addLeagueAndFixtures, onError);
         }
     };
 
@@ -61,6 +67,7 @@ const Leagues = ({ action, allLeagues, selectedLeagues }) => {
 
 Leagues.propTypes = {
     action: PropTypes.func.isRequired,
+    onError: PropTypes.func.isRequired,
     allLeagues: PropTypes.array.isRequired,
     selectedLeagues: PropTypes.array.isRequired
 };

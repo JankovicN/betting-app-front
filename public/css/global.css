@@ -201,29 +201,8 @@ div {
     /* Display the modal when .show class is applied */
 }
 
-/* Close button styles */
-.close {
-    position: absolute;
-    top: 5px;
-    right: 5px;
-    font-size: 30px;
-    cursor: pointer;
-    color: #fff;
-    z-index: 1000;
-}
-
-.close_dark {
-    position: absolute;
-    top: 5px;
-    right: 5px;
-    font-size: 30px;
-    cursor: pointer;
-    color: var(--color-black);
-    z-index: 1000;
-}
-
-
 /* Modal content styles */
+
 .custom-modal .modal-content {
     background-color: var(--color-primary);
     padding: 20px;
@@ -249,12 +228,32 @@ div {
     height: 100%;
 }
 
+/* Close button styles */
+.close {
+    position: absolute;
+    top: 5px;
+    right: 5px;
+    font-size: 30px;
+    cursor: pointer;
+    color: #fff;
+    z-index: 1000;
+}
+
+.close_dark {
+    position: absolute;
+    top: 5px;
+    right: 5px;
+    font-size: 30px;
+    cursor: pointer;
+    color: var(--color-black);
+    z-index: 1000;
+}
+
 .state-highlight {
     color: #ff0000;
     /* Change this to the color you prefer for the "State" section */
     font-weight: bold;
 }
-
 
 .row_style {
     --bs-gutter-x: 1.5rem;
@@ -282,27 +281,15 @@ div {
     position: fixed;
     /* Keeps the container fixed in the viewport */
     top: 10px;
-    right: 10px;
+    left: 10px;
     /* Adjust these values for the desired position */
     z-index: 1000;
     /* Ensures the container is above other elements */
     display: flex;
     flex-direction: column;
-    align-items: flex-end;
+    align-items: flex-start;
+    opacity: 90%;
     /* Align error messages to the right */
-}
-
-.error {
-    background-color: #fff;
-    /* Red background color for error messages */
-    color: #f34f44;
-    /* White text color */
-    padding: 8px 12px;
-    margin-bottom: 4px;
-    /* Margin between error messages */
-    border-radius: 4px;
-    border: 1px solid #f34f44;
-    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
 }
 
 

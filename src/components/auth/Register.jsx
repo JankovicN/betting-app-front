@@ -1,5 +1,5 @@
 import classes from './Auth.module.css'
-import {  useNavigate } from 'react-router-dom';
+import { useNavigate } from 'react-router-dom';
 
 const Register = () => {
 
@@ -10,7 +10,7 @@ const Register = () => {
   }
 
   return (
-    <div className={` ${classes.auth_container}`}>
+    <div className={`unselectable-text ${classes.auth_container}`}>
       <form className={` ${classes.form_container}`}>
         <h3 className="fs-1 text_center">Sign Up</h3>
 

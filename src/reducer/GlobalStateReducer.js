@@ -1,3 +1,4 @@
+/* eslint-disable no-const-assign */
 /* eslint-disable no-case-declarations */
 
 // State JSON structure
@@ -9,37 +10,55 @@
 //     ],
 // }
 
+// let currentFixtures;
+// let currentSelectedLeagues;
+// let currentTicketBets;
+// let currentTotalOdds;
+// let currentWager;
+// let currentTotalWin;
+// let currentErrors;
+
 
 const globalStateReducer = (state, action) => {
     switch (action.type) {
 
         // Ticket action cases
         case 'ADD_OR_UPDATE_BET':
-            const { fixtureId, home, away, date, betGroupName, oddId, oddName, odd } = action.payload;
-            const existingBetIndex = state.bets.findIndex((bet) => bet.fixtureId === fixtureId);
-            // Updated bets is set to current bets that are in ticket, it will be changed in the following
-            let currentTicketBets = state.bets;
-            let currentTotalOdds = state.totalOdd;
-            let currentWager = state.wager;
-            let currentTotalWin = state.totalWin;
+            const {
+                fixtureId,
+                home,
+                away,
+                date,
+                betGroupId,
+                betGroupName,
+                oddId,
+                oddName,
+                odd
+            } = action.payload;
+            console.log("=====================================================")
+            console.log(`ACTION: Adding/Updating bet for Fixture ID = ${fixtureId}`)
+
+            // Clone the current ticket state to avoid modifying the state directly
+            const updatedTicket = { ...state.ticket };
+
+            const existingBetIndex = updatedTicket.bets.findIndex((bet) => bet.fixtureId === fixtureId);
 
             if (existingBetIndex !== -1) {
-                // If an element with the same fixtureId exists, update its fields
-                let currentBet = currentTicketBets[existingBetIndex];
-                currentTotalOdds = currentTotalOdds * odd / currentBet.odd;
-                currentTotalWin = currentWager * currentTotalOdds;
+                // Update existing bet
+                const currentBet = updatedTicket.bets[existingBetIndex];
+                currentBet.betGroupId = betGroupId;
                 currentBet.betGroupName = betGroupName;
+                currentBet.oddId = oddId;
                 currentBet.oddName = oddName;
                 currentBet.odd = odd;
             } else {
-                // If no element with the specified fixtureId exists, add the new element
-                currentTotalOdds = currentTotalOdds * odd;
-                currentTotalWin = currentWager * currentTotalOdds;
-                currentTicketBets.push({
+                // Add new bet
+                updatedTicket.bets.push({
                     fixtureId,
                     home,
                     away,
                     date,
+                    betGroupId,
                     betGroupName,
                     oddId,
                     oddName,
@@ -47,96 +66,160 @@ const globalStateReducer = (state, action) => {
                 });
             }
 
+            // Recalculate totalOdd and totalWin based on the updated bets
+            updatedTicket.totalOdd = updatedTicket.bets.reduce((acc, bet) => acc * bet.odd, 1);
+            updatedTicket.totalWin = updatedTicket.wager * updatedTicket.totalOdd;
 
             return {
                 ...state,
-                bets: currentTicketBets,
-                wager: currentWager,
-                totalWin: currentTotalWin,
+                ticket: updatedTicket,
             };
 
         case 'REMOVE_BET':
-            // Handle state updates for adding or updating a bet
             const { fixtureIdToRemove } = action.payload;
+            console.log("=====================================================")
+            console.log(`ACTION: Removing bet for Fixture ID = ${fixtureIdToRemove}`)
+
             // Use the filter method to create a new array without the element to be removed
-            currentTicketBets = [];
-            var updatedTicketBets = state.totalOdd;
-            currentTicketBets = state.bets;
-            currentTotalOdds = state.totalOdd;
-            for (let i = 0; i < currentTicketBets.length; i++) {
-                const bet = currentTicketBets[i];
-                if (bet.fixtureId === fixtureIdToRemove) {
-                    // Skip this bet and update the totalOdd and totalWin
-                    currentTotalOdds /= bet.odd;
-                } else {
-                    // Include this bet in the updatedBets array
-                    updatedTicketBets.push(bet);
-                }
-            }
-            currentTotalWin = state.wager * currentTotalOdds;
+            const updatedBets = state.ticket.bets.filter((bet) => bet.fixtureId !== fixtureIdToRemove);
+
+            // Recalculate totalOdd and totalWin based on the updated bets
+            const updatedTotalOdd = updatedBets.reduce((acc, bet) => acc * bet.odd, 1);
+            const updatedTotalWin = state.ticket.wager * updatedTotalOdd;
+
             return {
                 ...state,
-                totalOdd: currentTotalOdds,
-                totalWin: currentTotalWin,
-                bets: updatedTicketBets, // Set the state.bets to the updated array
+                ticket: {
+                    ...state.ticket,
+                    bets: updatedBets,
+                    totalOdd: updatedTotalOdd,
+                    totalWin: updatedTotalWin,
+                },
             };
 
         case 'UPDATE_WAGER':
             const newWager = action.payload;
-            currentTotalWin = newWager * state.totalOdd;
+            console.log("=====================================================")
+            console.log(`ACTION: Updating wager to ${newWager}`)
 
             return {
                 ...state,
-                wager: newWager,
-                totalWin: currentTotalWin,
+                ticket: {
+                    ...state.ticket,
+                    totalWin: newWager * state.ticket.totalOdd,
+                    wager: newWager,
+                },
             };
 
-        case 'PLAY_TICKET':
+        case 'RESET_TICKET':
+            console.log("=====================================================")
+            console.log(`ACTION: Reseting ticket`)
             return {
                 ...state,
-                totalWager: 20,
-                totalOdd: 1,
-                totalWin: 0,
-                bets: [],
+                ticket: {
+                    wager: 20,
+                    totalOdd: 1,
+                    totalWin: 0,
+                    bets: [
+                    ],
+                },
             };
 
         case 'UPDATE_INVALID_WAGER':
-            currentTotalWin = 0;
-
+            console.log("=====================================================")
+            console.log(`ACTION: Updating invalid wager`)
             return {
                 ...state,
-                totalWin: currentTotalWin,
+                ticket: {
+                    ...state.ticket,
+                    totalWin: 0
+                }
             };
 
         // Fixutre action cases
 
         case 'ADD_FIXTURES':
+            const { fixturesToAdd } = action.payload;
+            console.log("=====================================================")
+            console.log(`ACTION: Adding new Fixtures for League ID = ${fixturesToAdd.id}`)
 
-            const { fixturesToAdd, selectedLeague } = action.payload;
-            let currentFixtures = state.fixtures;
-            let currentSelectedleagues = state.selectedLeagues;
+            const currentFixtures = state.fixtures;
             currentFixtures.push(fixturesToAdd);
-            currentSelectedleagues.push(selectedLeague);
+
             return {
                 ...state,
                 fixtures: currentFixtures,
-                selectedLeagues: currentSelectedleagues
             };
         case 'REMOVE_FIXTURES':
-
             const { leagueId } = action.payload;
-            currentFixtures = state.fixtures;
-            currentSelectedleagues = state.selectedLeagues;
-            currentFixtures=currentFixtures.filter((league) => league.id !==leagueId);
-            currentSelectedleagues=currentSelectedleagues.filter((id) => id !==leagueId);
+            console.log("=====================================================")
+            console.log(`ACTION: Removing Fixtures for League ID = ${leagueId}`)
+
+            const updatedFixtures = state.fixtures
+                .filter((fixture) => fixture.id !== leagueId);
+
             return {
                 ...state,
-                fixtures: currentFixtures,
-                selectedLeagues: currentSelectedleagues
+                fixtures: updatedFixtures
             };
 
         // League action cases
+        case 'SET_LEAGUES':
+            console.log("=====================================================")
+            console.log(`ACTION: Setting leagues`)
+            const { leagues } = action.payload;
+            return {
+                ...state,
+                selectedLeagues: [leagues[0].id],
+                leagues: leagues
+            };
 
+        case 'ADD_SELECTED_LEAGUE':
+            const { selectedLeague } = action.payload;
+            console.log("=====================================================")
+            console.log(`ACTION: Adding League ID = ${selectedLeague} to Selected Leagues`)
+
+            const currentSelectedLeagues = state.selectedLeagues
+                .push(selectedLeague);
+
+            return {
+                ...state,
+                selectedLeagues: [currentSelectedLeagues]
+            };
+        case 'REMOVE_SELECTED_LEAGUE':
+            const { leagueToRemove } = action.payload;
+            console.log("=====================================================")
+            console.log(`ACTION: Removing League ID = ${leagueToRemove} from Selected Leagues`)
+
+            const curtrentSelectedleagues = state.selectedLeagues
+                .filter((id) => id !== leagueToRemove);
+
+            return {
+                ...state,
+                selectedLeagues: [curtrentSelectedleagues]
+            };
+
+        // Error action cases
+        case 'ADD_ERRORS':
+            const { errorsToAdd } = action.payload;
+            console.log("=====================================================")
+            console.log(`ACTION: Adding Errors`)
+            console.log(errorsToAdd)
+            const updatedErrorsArray = [...state.errors, ...errorsToAdd];
+            return {
+                ...state,
+                errors: updatedErrorsArray
+            };
+        case 'REMOVE_ERROR':
+            console.log("=====================================================")
+            console.log(`ACTION: Removing error`)
+            const { index } = action.payload;
+            const clonedErrors = [...state.errors];
+            clonedErrors.splice(index, 1);
+            return {
+                ...state,
+                errors: clonedErrors
+            };
 
         default:
             return state; // Return the current state if the action doesn't match any case

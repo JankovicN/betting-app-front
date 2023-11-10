@@ -8,8 +8,9 @@ import TicketModal from './ticket/TicketModal';
 import Ticket from './ticket/Ticket';
 import Fixtures from './fixtures/Fixtures';
 import AuthService from '../../service/AuthService';
-import { useNavigate } from 'react-router-dom';
 import LeagueService from '../../service/LeagueService';
+import { isAuthenticated } from '../../util/auth';
+import PropTypes from 'prop-types';
 
 const initialData = {
     wager: 20,
@@ -22,7 +23,8 @@ const initialData = {
 class Body extends Component {
     constructor(props) {
         super(props);
-        // Define your initial state here
+        this.setIsAuthenticated = props.setIsAuthenticated;
+
         this.state = {
             leagues: [],
             selectedLeagues: [],
@@ -32,25 +34,39 @@ class Body extends Component {
             showTicketModal: false,
             errors: []
         };
+
+
+        this.addFixtures = this.addFixtures.bind(this);
     }
 
     componentDidMount() {
-        console.log("Loading page..")
-        this.loadData();
+        isAuthenticated()
+            .then((result) => {
+                if (result) {
+                    this.loadData();
+                } else {
+                    this.goToLogin();
+                }
+            })
+            .catch((error) => {
+                console.error('Error:', error);
+            });
     }
 
 
     loadData() {
-        leagueService.getAllLeagues(this.addLeagues, this.addError);
+        leagueService.getAllLeagues(this.addLeagues, this.onErrror);
     }
 
     addLeagues = (data) => {
-        console.log(data);
-        if (data === null || data.length !== 0) {
-            this.setState({
-                leagues: data,
-            });
-            LeagueService.getFixturesForLeague(data[0].id, this.addFixtures, this.addError);
+        if (data !== undefined && data.data !== undefined && data.data.data !== undefined && data.data.data.length !== 0) {
+            this.dispatchAction({
+                type: 'SET_LEAGUES', // Specify the action type
+                payload: {
+                    leagues: data.data.data,
+                },
+            })
+            LeagueService.getFixturesForLeague(data.data.data[0].id, this.addFixtures, this.onErrror);
         } else {
             this.setState({
                 leagues: [],
@@ -59,57 +75,69 @@ class Body extends Component {
     };
 
     addFixtures(data) {
-        console.log(data);
-        if (data === null || data.fixtures.length !== 0) {
+        if (data !== undefined && data.data !== undefined && data.data.data !== undefined && data.data.data.length !== 0) {
             this.dispatchAction({
                 type: 'ADD_FIXTURES', // Specify the action type
                 payload: {
-                    fixturesToAdd: data.fixtures,
-                    selectedLeague:data.id
+                    fixturesToAdd: data.data.data,
                 },
             })
-            this.setState((prevState) => ({
-                fixtures: [...prevState, data.fixtures],
-                selectedLeagues: [...prevState, data.id],
-            }));
         }
     }
 
     dispatchAction = (action) => {
         const updatedState = globalStateReducer(this.state, action);
-        this.setState({ updatedState });
+        this.setState(updatedState);
+        console.log("=====================================================")
+        console.log("Updated state:")
+        console.log(updatedState)
+    }
+
+    onErrror = (data) => {
+        console.log("Error data:")
+        console.log(data)
+        if (data.response !== undefined && JSON.stringify(data.response).includes('The Token has expired')) {
+            AuthService.refreshToken(this.onRefreshTokenExpired);
+        } else if (data.code !== undefined && data.code === 'ERR_NETWORK') {
+            this.addError("Cannot connect to server at this time.\nTry again later");
+            this.setIsAuthenticated(false)
+        } else if (data.response !== undefined && data.response.data !== undefined && data.response.data.errorMessages !== undefined) {
+            this.addError(data.response.data.errorMessages);
+        }
+
     }
 
     addError = (data) => {
-        console.log(data)
-        if (data.code !== null && data.code === "ERR_BAD_REQUEST"
-            && data.response !== null && data.response.data !== null && data.response.data.error_message !== null
-            && data.response.data.error_message.includes('The Token has expired on')) {
-            AuthService.refreshToken(this.onRefreshTokenExpired);
-        }
-        if (data === null || data.errorMessages.length === 0) {
-            this.setState((prevState) => ({
-                errors: [...prevState.errors, "Unknown error"],
-            }))
-        } else {
-            this.setState((prevState) => ({
-                errors: [...prevState.errors, data.errorMessages],
-            }));
-        }
+        this.dispatchAction({
+            type: 'ADD_ERRORS', // Specify the action type
+            payload: {
+                errorsToAdd: data
+            },
+        })
+    };
+
+    goToLogin = () => {
+        this.setIsAuthenticated(false);
     };
 
     onRefreshTokenExpired = (data) => {
-        console.log("Refresh token has expired: ")
-        console.log(data)
-        useNavigate("/login")
+        if (data.code !== undefined && data.code === "ERR_NETWORK") {
+            this.addError("Cannot connect to server, try again later!");
+            this.setIsAuthenticated(false)
+        } else {
+            this.addError("Session has ended!");
+            this.setIsAuthenticated(false)
+        }
+
     }
 
     removeError = (index) => {
-        this.setState((prevState) => {
-            const updatedErrors = [...prevState.errors];
-            updatedErrors.splice(index, 1);
-            return { errors: updatedErrors };
-        });
+        this.dispatchAction({
+            type: 'REMOVE_ERROR', // Specify the action type
+            payload: {
+                index: index
+            },
+        })
     }
 
     handleShowLeaguesModal = () => {
@@ -134,13 +162,15 @@ class Body extends Component {
 
     render() {
         // You can pass the state and methods to child components as props
-        const { errors } = this.state;
         return (
             <div className={"unselectable-text row min-vh-md-100"}>
                 <div className="error-container">
-                    {errors.map((error, index) => (
-                        <ErrorAlert key={index} error={error} removeError={() => this.removeError(index)} />
-                    ))}
+                    {this.state.errors !== undefined && this.state.errors.length !== 0
+                        ? this.state.errors.map((error, index) => (
+                            <ErrorAlert key={index} error={error} removeError={() => this.removeError(index)} />
+                        )
+                        ) : <></>
+                    }
                 </div>
                 <div className="col-12 mb-2">
                     <div className="row">
@@ -157,36 +187,43 @@ class Body extends Component {
                         action={this.dispatchAction}
                         allLeagues={this.state.leagues}
                         selectedLeagues={this.state.selectedLeagues}
-                        onClose={this.handleCloseLeaguesModal} />
+                        onClose={this.handleCloseLeaguesModal}
+                        onError={this.onErrror} />
                 </div>
                 <div className={`col-12 col-md-3 d-none d-md-block`}>
                     <Leagues
                         action={this.dispatchAction}
                         allLeagues={this.state.leagues}
-                        selectedLeagues={this.state.selectedLeagues} />
+                        selectedLeagues={this.state.selectedLeagues}
+                        onError={this.onErrror} />
                 </div>
                 <div className={`col-12 col-md-6 min-vh-50`}>
                     <Fixtures
                         action={this.dispatchAction}
-                        fixtureData={this.state.fixtures}
-                        onError={this.addError} />
+                        fixtureData={this.state}
+                        onError={this.onErrror} />
                 </div>
                 <div className="col-12 d-md-none" >
                     <TicketModal
                         show={this.state.showTicketModal}
                         onClose={this.handleCloseTicketModal}
-                        onError={this.addError}
+                        onError={this.onErrror}
                         action={this.dispatchAction}
                         ticketData={this.state.ticket} />
                 </div>
                 <div className={`col-12 col-md-3 d-none d-md-block`}>
                     <Ticket
                         action={this.dispatchAction}
-                        ticketData={this.state.ticket} />
+                        ticketData={this.state.ticket}
+                        onError={this.onErrror} />
                 </div>
             </div >
         );
     }
 }
 
+
+Body.propTypes = {
+    setIsAuthenticated: PropTypes.func.isRequired, // Define the 'history' prop
+};
 export default Body;

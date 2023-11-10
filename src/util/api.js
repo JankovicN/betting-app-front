@@ -1,5 +1,6 @@
 import axios from 'axios';
 import Cookies from 'js-cookie';
+import { isAuthenticated } from './auth';
 
 const api = axios.create({
   // Your API base URL
@@ -8,13 +9,19 @@ const api = axios.create({
 
 // Add an interceptor to set the 'Authorization' header for each request
 api.interceptors.request.use((config) => {
-  const authToken = Cookies.get('authToken');
-
-  if (authToken) {
-    config.headers.Authorization = `Bearer ${authToken}`;
-  }
-
-  return config;
+  isAuthenticated()
+    .then((result) => {
+      if (result) {
+        const authToken = Cookies.get('authToken');
+        config.headers.Authorization = `Bearer ${authToken}`;
+      } else {
+        return config;
+      }
+    })
+    .catch((error) => {
+      console.error('Error:', error);
+    });
+    return config;
 });
 
 export default api;

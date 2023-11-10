@@ -1,4 +1,27 @@
-
 .all_bets_container {
-    min-height: 40vh; /* Initial height */
+    min-height: 40vh;
+    /* Initial height */
+}
+
+.remove_bet {
+    position: absolute;
+    top: 0;
+    right: 0;
+    cursor: pointer;
+    padding: 5px;
+    font-size: 30px;
+}
+
+.remove_bets_button {
+    width: 100%;
+    font-weight: 500;
+    border: none;
+    margin-bottom: 1px;
+    background-color: var(--color-gray);
+    color: var(--color-white);
+}
+
+.remove_bets_button:hover {
+    background-color: var(--color-black);
+    color: var(--color-white);
 }

@@ -1,58 +1,48 @@
 import Cookies from 'js-cookie';
 import api from '../util/api';
 
-
-const setAuthToken = (token) => {
-    if (token) {
-        // Set the token in a cookie with an expiration time
-        Cookies.set('authToken', token, { expires: 1 / 24 });
-    } else {
-        console.log("No access token is provided")
-    }
-};
-
-const setRefreshToken = (refreshToken) => {
-    if (refreshToken) {
-        // Set the token in a cookie with an expiration time
-        Cookies.set('refreshToken', refreshToken, { expires: 15 });
-    } else {
-        console.log("No refresh token is provided")
-    }
-};
-
 const login = (username, password, onSuccess, onError) => {
+    console.log("=====================================================")
+    console.log(`Login request`)
     api
         .post('/login', { username, password })
         .then((response) => {
-            console.log("Succesfull login reqeust:")
-            console.log(response)
             const responseObject = response.data;
             if (responseObject && responseObject.access_token) {
                 setAuthToken(responseObject.access_token);
                 setRefreshToken(responseObject.refresh_token);
-                onSuccess(responseObject);
+                setUsername(username);
+                onSuccess();
             } else {
                 onError(response);
             }
         })
         .catch((error) => {
-            console.log(error)
             onError(error);
         });
 };
 
 const register = (userData, onSuccess, onError) => {
+    console.log("=====================================================")
+    console.log(`Register request`)
     api
         .post('/user/register', userData)
         .then((response) => {
             onSuccess(response);
         })
         .catch((error) => {
-            onError(error);
+            if (error === undefined || error.response === undefined) {
+                console.log(error)
+            } else {
+                console.log(error)
+                onError(error);
+            }
         });
 };
 
 const refreshToken = (onError) => {
+    console.log("=====================================================")
+    console.log(`Refresh token request`)
     const refreshToken = Cookies.get('refreshToken');
     Cookies.remove('authToken');
     api
@@ -63,19 +53,48 @@ const refreshToken = (onError) => {
             const responseObject = response.data;
             if (responseObject && responseObject.access_token) {
                 setAuthToken(responseObject.access_token);
-                console.log("Succesfully refreshed the authentication token:")
-                console.log(responseObject)
+                window.location.reload()
             }
         })
         .catch((error) => {
-            console.log("Error refreshing the authentication token:")
+            Cookies.remove('refreshToken');
             console.log(error)
-            onError(error)
+            onError(error);
         });
+};
+
+const setAuthToken = (token) => {
+    if (token) {
+        // Set the token in a cookie with an expiration time
+        console.log("Setting auth token")
+        Cookies.set('authToken', token, { expires: 1 / 24 });
+    } else {
+        console.log("No access token is provided")
+    }
+};
+
+const setRefreshToken = (refreshToken) => {
+    if (refreshToken) {
+        // Set the token in a cookie with an expiration time
+        console.log("Setting refresh token")
+        Cookies.set('refreshToken', refreshToken, { expires: 15 });
+    } else {
+        console.log("No refresh token is provided")
+    }
+};
+
+const setUsername = (username) => {
+    if (username) {
+        // Set the token in a cookie with an expiration time
+        console.log("Setting username")
+        Cookies.set('username', username, { expires: 15 });
+    } else {
+        console.log("No username is provided")
+    }
 };
 
 export default {
     login,
     register,
-    refreshToken,
+    refreshToken
 };
