@@ -1,6 +1,6 @@
 .header {
     background: var(--color-primary);
     color: var(--color-white);
-    height: 10vh;
+    min-height: 10vh;
 }
 

@@ -1,17 +1,22 @@
 import Footer from "../common/Footer";
 import Header from "../common/Header";
 import User from "./User";
+import PropTypes from 'prop-types';
 
 
-const UserPage = () => {
+const UserPage = ({ setIsAuthenticated }) => {
 
     return (
-        <div  className='main_container'>
+        <div className=''>
             <Header />
-            <User />
+            <User setIsAuthenticated={setIsAuthenticated} />
             <Footer />
         </div>
     );
+};
+
+UserPage.propTypes = {
+    setIsAuthenticated: PropTypes.func.isRequired, // Define the 'history' prop
 };
 
 export default UserPage;

@@ -1,5 +1,6 @@
 import Cookies from 'js-cookie';
 import api from '../util/api';
+import { jwtDecode } from "jwt-decode";
 
 const login = (username, password, onSuccess, onError) => {
     console.log("=====================================================")
@@ -10,8 +11,8 @@ const login = (username, password, onSuccess, onError) => {
             const responseObject = response.data;
             if (responseObject && responseObject.access_token) {
                 setAuthToken(responseObject.access_token);
-                setRefreshToken(responseObject.refresh_token);
                 setUsername(username);
+                checkIfUserIsAdmin(responseObject.access_token);
                 onSuccess();
             } else {
                 onError(response);
@@ -40,28 +41,13 @@ const register = (userData, onSuccess, onError) => {
         });
 };
 
-const refreshToken = (onError) => {
-    console.log("=====================================================")
-    console.log(`Refresh token request`)
-    const refreshToken = Cookies.get('refreshToken');
-    Cookies.remove('authToken');
-    api
-        .get('user/token/refresh', {
-            headers: { 'Authorization': `Bearer ${refreshToken}` }
-        })
-        .then((response) => {
-            const responseObject = response.data;
-            if (responseObject && responseObject.access_token) {
-                setAuthToken(responseObject.access_token);
-                window.location.reload()
-            }
-        })
-        .catch((error) => {
-            Cookies.remove('refreshToken');
-            console.log(error)
-            onError(error);
-        });
-};
+const checkIfUserIsAdmin = (token) => {
+    const decodedToken = jwtDecode(token);
+    if (decodedToken.roles.includes("ROLE_ADMIN")) {
+        setAdmin();
+    }
+
+}
 
 const setAuthToken = (token) => {
     if (token) {
@@ -73,28 +59,23 @@ const setAuthToken = (token) => {
     }
 };
 
-const setRefreshToken = (refreshToken) => {
-    if (refreshToken) {
-        // Set the token in a cookie with an expiration time
-        console.log("Setting refresh token")
-        Cookies.set('refreshToken', refreshToken, { expires: 15 });
-    } else {
-        console.log("No refresh token is provided")
-    }
-};
-
 const setUsername = (username) => {
     if (username) {
         // Set the token in a cookie with an expiration time
         console.log("Setting username")
-        Cookies.set('username', username, { expires: 15 });
+        Cookies.set('username', username, { expires: 1 / 24 });
     } else {
         console.log("No username is provided")
     }
 };
 
+const setAdmin = () => {
+    // Set the token in a cookie with an expiration time
+    console.log("Setting admin role")
+    Cookies.set('admin', "admin", { expires: 1 / 24 });
+}
+
 export default {
     login,
-    register,
-    refreshToken
+    register
 };

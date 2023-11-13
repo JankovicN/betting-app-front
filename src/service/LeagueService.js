@@ -13,10 +13,10 @@ const getAllLeagues = (onSuccess, onError) => {
         });
 };
 
-const getFixturesForLeague = (leagueId, onSuccess, onError) => {
+const getFixturesForLeague = (leagueID, onSuccess, onError) => {
     console.log("=====================================================")
-    console.log(`Fething fixtures for league id ${leagueId}!`)
-    api.get(`/league/ns/${leagueId}`)
+    console.log(`Fething fixtures for league id ${leagueID}!`)
+    api.get(`/league/ns`, { params: { leagueID } })
         .then((response) => {
             console.log(response);
             onSuccess(response);

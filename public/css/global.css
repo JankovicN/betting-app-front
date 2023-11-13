@@ -46,6 +46,10 @@ div {
     font-family: 'Poppins', sans-serif;
 }
 
+.container_width {
+    width: 100%;
+}
+
 .title {
     background: var(--color-primary);
     color: var(--color-white);
@@ -84,6 +88,22 @@ div {
 
 .default_padding_px {
     padding: 5px;
+}
+
+
+.rounded_top_border {
+    border: 1px solid var(--color-primary);
+    border-radius: 10px 10px 0 0;
+}
+
+.rounded_bottom_border {
+    border-radius: 0 0 10px 10px;
+    border: 1px solid var(--color-primary);
+}
+
+.rounded_border {
+    border-radius: 10px 10px 10px 10px;
+    border: 1px solid var(--color-primary);
 }
 
 .button {
@@ -245,7 +265,9 @@ div {
     right: 5px;
     font-size: 30px;
     cursor: pointer;
-    color: var(--color-black);
+    background-color: var(--color-primary);
+    color: var(--color-white);
+    border: none;
     z-index: 1000;
 }
 
@@ -282,6 +304,24 @@ div {
     /* Keeps the container fixed in the viewport */
     top: 10px;
     left: 10px;
+    /* Adjust these values for the desired position */
+    z-index: 1000;
+    /* Ensures the container is above other elements */
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    opacity: 90%;
+    /* Align error messages to the right */
+}
+
+/*
+  Info CSS
+*/
+.info-container {
+    position: fixed;
+    /* Keeps the container fixed in the viewport */
+    top: 10px;
+    right: 10px;
     /* Adjust these values for the desired position */
     z-index: 1000;
     /* Ensures the container is above other elements */
@@ -332,6 +372,13 @@ div {
 
     .light_border_left {
         border-right: none;
+    }
+
+    .custom_modal {
+        width: 100vw;
+        margin: auto;
+        margin-top: 20vh;
+        font-size: small;
     }
 
 }

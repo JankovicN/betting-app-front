@@ -1,4 +1,3 @@
-import Line from "../../common/Line";
 import classes from "./Ticket.module.css";
 import TicketBet from "./TicketBet";
 import TicketWager from "./TicketWager";
@@ -15,12 +14,9 @@ const Ticket = ({ ticketData, action, onError }) => {
     }
 
     return (
-        <div className={`light_border  resizableDiv`}>
-            <div className="title default_padding_px ps-3 pe-3  pt-2 pb-2 fs-3">
+        <div className={`rounded_border resizableDiv`}>
+            <div className="title rounded_top_border default_padding_px ps-3 pe-3  pt-2 pb-2 fs-3">
                 Ticket
-            </div>
-            <div className=" d-none d-md-block">
-                <Line />
             </div>
 
             <button className={`p-1 fs-5 m-auto text-center  ${classes.remove_bets_button} `} onClick={() => removeAllBets()}>REMOVE ALL BETS</button>

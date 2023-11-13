@@ -1,32 +1,43 @@
 import PropTypes from 'prop-types';
+import './Ticket.css';
+
+
 
 const BetsTable = ({ bets }) => {
     return (
-        <table className="table table-hover">
+        <table className="table table-hover unselectable-text  ">
             <thead>
-                <tr>
-                    <th>Fixture</th>
-                    <th className='text_center'>Result</th>
-                    <th className='text_center'>Fixture Date</th>
-                    <th className='text_center'>Odd</th>
-                    <th className='text_center'>State</th>
+                <tr className=''>
+                    <th className='column_name'>Fixture</th>
+                    <th className='text_center column_name'>Bet</th>
+                    <th className='text_center column_name'>Result</th>
+                    <th className='text_center column_name'>Date</th>
+                    <th className='text_center column_name'>Odd</th>
+                    <th className='text_center column_name'>State</th>
                 </tr>
             </thead>
             <tbody>
                 {bets.map((bet) => (
-                    <tr key={bet.id}>
+                    <tr key={bet.id}
+                    >
                         <td>
-                            {`${bet.home} - ${bet.away}`}
-                            <div className="text-muted">{bet.betGroupName}</div>
+                            <div className="border-bottom pb-1">
+                                {bet.home}
+                            </div>
+                            <div className="pt-1">
+                                {bet.away}
+                            </div>
                         </td >
-                        <td className='text_center'>{bet.result}</td>
-                        <td className='text_center'>
+                        <td>
+                            <div className='text_center align-middle '>{bet.betGroupName} <br /><span className='column_name'>{bet.name}</span></div></td>
+                        <td className='text_center align-middle'>{bet.result}</td>
+                        <td className='text_center align-middle'>
                             {new Date(bet.fixtureDate).toLocaleDateString()}
                             <br />
                             {new Date(bet.fixtureDate).toLocaleTimeString()}
                         </td>
-                        <td className='text_center'>{bet.odd} <br /> {bet.name}</td>
-                        <td className='text_center'>{bet.state}</td>
+                        <td className='text_center align-middle column_name'>{bet.odd}</td>
+                        <td className={`text_center align-middle fw-bold fs-4 state-${bet.state}`}>{bet.state}</td>
                     </tr>
                 ))}
             </tbody>
@@ -36,7 +47,7 @@ const BetsTable = ({ bets }) => {
 
 
 BetsTable.propTypes = {
-    bets: PropTypes.object.isRequired,
+    bets: PropTypes.array.isRequired,
 };
 
 export default BetsTable;

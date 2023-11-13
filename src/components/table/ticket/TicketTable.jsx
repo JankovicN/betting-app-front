@@ -1,36 +1,48 @@
 import PropTypes from 'prop-types';
+import './Ticket.css';
 
 const TicketTable = ({ ticketList, onRowClick }) => {
   return (
-    <table className="table table-hover ">
+    <table className="table table-hover">
       <thead>
         <tr>
-          <th>Date of Play</th>
-          <th>Wager</th>
-          <th>Total Odds</th>
-          <th>Win</th>
-          <th>State</th>
+          <th className='text-center'>Date</th>
+          <th className='text-center'>Wager</th>
+          <th className='text-center'>Odds</th>
+          <th className='text-center'>Win</th>
+          <th className='text-center'>State</th>
         </tr>
       </thead>
-      <tbody>
-        {ticketList.map((ticket) => (
-          <tr key={ticket.id} onClick={() => onRowClick(ticket)}>
-            <td>{ticket.dateOfPlay}</td>
-            <td>{ticket.wager}</td>
-            <td>{ticket.totalOdd}</td>
-            <td>{ticket.totalWin}</td>
-            <td>{ticket.state}</td>
+      {ticketList === null || ticketList === undefined || ticketList.length < 1
+        ?
+        <tbody>
+          <tr>
+            <td colSpan="5" className="fs-4 text-center ">
+              No tickets to show
+            </td>
           </tr>
-        ))}
-      </tbody>
+        </tbody>
+        :
+        <tbody className=''>
+          {ticketList.map((ticket) => (
+            <tr key={ticket.id} className={`state-${ticket.state}`} onClick={() => onRowClick(ticket)}>
+              <td className='text-center'>{ticket.dateOfPlay.split(' ')[0]}</td>
+              <td className='text-center'>{ticket.wager}</td>
+              <td className='text-center'>{ticket.totalOdd}</td>
+              <td className='text-center'>{ticket.totalWin}</td>
+              <td className='text-center'>{ticket.state}</td>
+            </tr>
+          ))}
+        </tbody>
+      }
     </table>
   );
 };
 
 
 TicketTable.propTypes = {
-    ticketList: PropTypes.object.isRequired,
-    onRowClick:PropTypes.func.isRequired
+  ticketList: PropTypes.array,
+  onRowClick: PropTypes.func.isRequired
 };
 
 export default TicketTable;

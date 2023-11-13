@@ -1,9 +1,9 @@
 import api from '../util/api';
 
-const getAllOddsForFixture = (fixtureId, onSuccess, onError) => {
+const getAllOddsForFixture = (fixtureID, onSuccess, onError) => {
     console.log("=====================================================")
-    console.log(`Fething all odds for fixture id ${fixtureId}`)
-    api.get(`/betGroup/get/${fixtureId}`)
+    console.log(`Fething all odds for fixture id ${fixtureID}`)
+    api.get(`/betGroup/get`, { params: { fixtureID } })
         .then((response) => {
             console.log(response)
             onSuccess(response.data.data);

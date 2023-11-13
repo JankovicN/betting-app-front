@@ -1,6 +1,11 @@
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import TicketTable from '../table/ticket/TicketTable';
 import TicketDetails from '../table/ticket/TicketDetails';
+import Cookies from 'js-cookie';
+import TicketService from '../../service/TicketService';
+import AuthService from '../../service/AuthService';
+import PropTypes from 'prop-types';
+import BetService from '../../service/BetService';
 
 const ticketList = [
     {
@@ -65,30 +70,60 @@ const bets = [
     }
 ]
 
-const UserTickets = () => {
+const UserTickets = ({ onError, setError }) => {
+    const [ticketList, setTicketList] = useState(null)
     const [selectedTicket, setSelectedTicket] = useState(null);
+    const [bets, setTicketBets] = useState(null);
+
+    useEffect(() => {
+        const username = Cookies.get('username');
+        if (username) {
+            TicketService.getUserTickets(username, onSuccessTicketList, onError);
+        } else {
+            setError("Username is missing!")
+        }
+    }, [])
+
+    const onSuccessTicketList = (data) => {
+        console.log('onSuccessTicketList')
+        console.log(data)
+        if (data !== undefined && data !== null && data.length > 0) {
+            setTicketList(data)
+        }
+    }
+
+    const onSuccessBetsCall = (data) => {
+        setTicketBets(data);
+    }
 
     const handleRowClick = (ticket) => {
-        ticket.bets = bets;
         setSelectedTicket(ticket);
+        const ticketID = ticket.id;
+        BetService.getBetsForTicket(ticketID, onSuccessBetsCall, onError);
     };
 
     const closeModal = () => {
         setSelectedTicket(null);
+        setTicketBets(null);
     };
 
     return (
-        <div className="light_border p-3 ">
+        <div className="light_border p-3  ms-3 me-3  unselectable-text">
             <div className='text_center fs-3'>
                 User Tickets
             </div>
             <TicketTable ticketList={ticketList} onRowClick={handleRowClick} />
 
-            {selectedTicket && (
-                <TicketDetails ticket={selectedTicket} onClose={closeModal} />
+            {selectedTicket && bets && (
+                <TicketDetails ticket={selectedTicket} bets ={bets} onClose={closeModal} />
             )}
         </div>
     );
 }
+
+UserTickets.propTypes = {
+    onError: PropTypes.func.isRequired, // Define the 'history' prop
+    setError: PropTypes.func.isRequired,
+};
 
 export default UserTickets;

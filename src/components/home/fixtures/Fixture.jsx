@@ -1,6 +1,7 @@
 import PropTypes from 'prop-types';
 import { useRef, useState } from 'react';
 import BetGroupService from '../../../service/BetGroupService';
+import classes from './Fixture.module.css'
 
 
 const Fixture = ({ fixture, action, ticket, onError }) => {
@@ -43,7 +44,7 @@ const Fixture = ({ fixture, action, ticket, onError }) => {
         if (fixtureOdds.current !== undefined && fixtureOdds.current.length === 0) {
             console.log(`Getting ALL odds for Fixutre ${fixtureId}`);
             BetGroupService.getAllOddsForFixture(fixtureId, onSuccess, onError);
-        }else{
+        } else {
             const showingOdds = dontShowOdds;
             setShowOdds(!showingOdds)
         }
@@ -57,7 +58,7 @@ const Fixture = ({ fixture, action, ticket, onError }) => {
 
     return (
         <>
-            <div className="row light_border w-100 m-auto">
+            <div className={`row  ${dontShowOdds ? 'rounded_bottom_border' : 'light_border'}  w-100 m-auto `}>
                 <div className="col-11 col-md-3 mt-3 mb-md-3">
                     <div className="  m-auto fs-6  d-block d-md-none">
                         {fixture.home.name} - {fixture.away.name}
@@ -76,12 +77,12 @@ const Fixture = ({ fixture, action, ticket, onError }) => {
                 <div className="col-11 fs-6 d-block d-md-none">
                     {fixture.date.split(' ')[0] + " " + fixture.date.split(' ')[1]}
                 </div>
-                <div className="col-11 col-md-6  p-0 d-flex flex-wrap justify-content-evenly">
+                <div className="col-11 col-md-6  p-0 d-flex flex-wrap justify-content-evenly ">
                     {fixture.betGroupList[0].odds.map(odd => {
                         var betGroup = fixture.betGroupList[0];
                         return (
                             <button
-                                className={`${checkIfSelected(betGroup.id, odd.id) ? 'odd_button_selected' : 'odd_button'} fs-6`}
+                                className={`${checkIfSelected(betGroup.id, odd.id) ? 'odd_button_selected' : 'odd_button'} fs-6 border rounded border-secondary`}
                                 onClick={() => addOdd(betGroup, odd)}
                                 key={odd.id}>
                                 {odd.name}<br />{odd.odd}
@@ -91,19 +92,17 @@ const Fixture = ({ fixture, action, ticket, onError }) => {
                 </div>
                 <div className="col-1  p-0">
                     <button
-                        className=" h-100 w-100 p-0 fs-3 fw-bold border-0 border-md-start m-auto button"
+                        className={`h-100 w-100 p-0 fs-3 fw-bold border-0 border-md-start m-auto button ${dontShowOdds ? classes.show_odds_button_border : ''}`}
                         onClick={() => showAllOdds(fixture.id)}>
                         +
                     </button>
                 </div>
             </div>
-            <div className={`${dontShowOdds ? 'invisble' : ''}`}>
-                {fixtureOdds.current.length !== 0 ? fixtureOdds.current.map(bg => {
+            <div className={`${dontShowOdds ? 'invisble' : ''} border  border-secondary`}>
+                {fixtureOdds.current.length !== 0 && !dontShowOdds ? fixtureOdds.current.map(bg => {
                     return (
-                        <div key={bg.id} className="w-100 border-bottom">
-                            {console.log('getting odds for fixture ' + bg.name)}
-
-                            <h1 className='p-3 fs-4 '>{bg.name}</h1>
+                        <div key={bg.id} className="w-100 border-bottom ">
+                            <h1 className={`p-3 fs-4 ${classes.bet_group_title}`}>{bg.name}</h1>
 
                             <div className=' mb-3 d-flex flex-wrap justify-content-evenly'>
                                 {bg.odds.map(odd => {
@@ -111,7 +110,7 @@ const Fixture = ({ fixture, action, ticket, onError }) => {
                                     return (
                                         <button
                                             key={odd.id}
-                                            className={`${checkIfSelected(betGroup.id, odd.id) ? 'odd_button_selected' : 'odd_button'} fs-7 mb-1`}
+                                            className={`${checkIfSelected(betGroup.id, odd.id) ? 'odd_button_selected' : 'odd_button'} fs-7 mb-1 border rounded border-secondary`}
                                             onClick={() => addOdd(betGroup, odd)}>
                                             {odd.name}<br /><span className='fw-bold'>{odd.odd}</span>
                                         </button>

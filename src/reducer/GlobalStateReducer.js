@@ -98,7 +98,7 @@ const globalStateReducer = (state, action) => {
             };
 
         case 'UPDATE_WAGER':
-            const newWager = action.payload;
+            const { newWager } = action.payload;
             console.log("=====================================================")
             console.log(`ACTION: Updating wager to ${newWager}`)
 
@@ -142,13 +142,15 @@ const globalStateReducer = (state, action) => {
             const { fixturesToAdd } = action.payload;
             console.log("=====================================================")
             console.log(`ACTION: Adding new Fixtures for League ID = ${fixturesToAdd.id}`)
-
+            console.log(fixturesToAdd)
             const currentFixtures = state.fixtures;
-            currentFixtures.push(fixturesToAdd);
+            const cocnatedFixtures = currentFixtures.concat(fixturesToAdd);
+            console.log("concated fixtures")
+            console.log(cocnatedFixtures)
 
             return {
                 ...state,
-                fixtures: currentFixtures,
+                fixtures: cocnatedFixtures,
             };
         case 'REMOVE_FIXTURES':
             const { leagueId } = action.payload;
@@ -176,16 +178,17 @@ const globalStateReducer = (state, action) => {
 
         case 'ADD_SELECTED_LEAGUE':
             const { selectedLeague } = action.payload;
-            console.log("=====================================================")
-            console.log(`ACTION: Adding League ID = ${selectedLeague} to Selected Leagues`)
+            console.log("=====================================================");
+            console.log(`ACTION: Adding League ID = ${selectedLeague} to Selected Leagues`);
 
-            const currentSelectedLeagues = state.selectedLeagues
-                .push(selectedLeague);
+            const currentSelectedLeagues = state.selectedLeagues.slice(); // Create a shallow copy
+            currentSelectedLeagues.push(selectedLeague);
 
             return {
                 ...state,
-                selectedLeagues: [currentSelectedLeagues]
+                selectedLeagues: currentSelectedLeagues,
             };
+
         case 'REMOVE_SELECTED_LEAGUE':
             const { leagueToRemove } = action.payload;
             console.log("=====================================================")
@@ -196,7 +199,7 @@ const globalStateReducer = (state, action) => {
 
             return {
                 ...state,
-                selectedLeagues: [curtrentSelectedleagues]
+                selectedLeagues: curtrentSelectedleagues
             };
 
         // Error action cases

@@ -8,8 +8,8 @@ import PropTypes from 'prop-types';
 const HomePage = ({setIsAuthenticated}) => {
 
     return (
-        <div  className='main_container'>
-            <Header />
+        <div className="container-fluid">
+            <Header setIsAuthenticated={setIsAuthenticated}/>
             <Body setIsAuthenticated={setIsAuthenticated}/>
             <Footer />
         </div>

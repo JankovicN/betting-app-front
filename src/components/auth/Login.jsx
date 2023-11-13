@@ -3,8 +3,9 @@ import { useNavigate } from 'react-router-dom';
 import { useState } from 'react';
 import AuthService from '../../service/AuthService';
 import PropTypes from 'prop-types';
+import Cookies from 'js-cookie';
 
-const Login = ({ setIsAuthenticated }) => {
+const Login = ({ setIsAuthenticated, setUserAdmin }) => {
   const navigate = useNavigate();
   const [formData, setFormData] = useState({ username: '', password: '' });
   const [errorMessage, setErrorMessage] = useState('');
@@ -17,6 +18,9 @@ const Login = ({ setIsAuthenticated }) => {
   const onSuccessFunction = () => {
     console.log("Successfully logged in ");
     setIsAuthenticated(true);
+    if (Cookies.get("admin")) {
+      setUserAdmin(true)
+    }
     navigate('/');
   };
 
@@ -32,6 +36,7 @@ const Login = ({ setIsAuthenticated }) => {
         );
         setErrorMessage(networkError);
         setIsAuthenticated(false)
+        setUserAdmin(false)
       } else if (error.response !== undefined && error.response.errorMessages !== null) {
         setErrorMessage("Invalid username or password!");
       } else {
@@ -115,6 +120,7 @@ const Login = ({ setIsAuthenticated }) => {
 
 Login.propTypes = {
   setIsAuthenticated: PropTypes.func.isRequired,
+  setUserAdmin: PropTypes.func.isRequired
 };
 
 

@@ -8,20 +8,20 @@ const api = axios.create({
 });
 
 // Add an interceptor to set the 'Authorization' header for each request
-api.interceptors.request.use((config) => {
-  isAuthenticated()
-    .then((result) => {
-      if (result) {
-        const authToken = Cookies.get('authToken');
-        config.headers.Authorization = `Bearer ${authToken}`;
-      } else {
-        return config;
-      }
-    })
-    .catch((error) => {
-      console.error('Error:', error);
-    });
+api.interceptors.request.use(async (config) => {
+  try {
+    const result = await isAuthenticated();
+
+    if (result) {
+      const authToken = Cookies.get('authToken');
+      config.headers.Authorization = `Bearer ${authToken}`;
+    }
+
     return config;
+  } catch (error) {
+    console.error('Error:', error);
+    return Promise.reject(error);
+  }
 });
 
 export default api;

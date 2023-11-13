@@ -7,7 +7,6 @@ import LeaguesModal from './leagues/LeaguesModal';
 import TicketModal from './ticket/TicketModal';
 import Ticket from './ticket/Ticket';
 import Fixtures from './fixtures/Fixtures';
-import AuthService from '../../service/AuthService';
 import LeagueService from '../../service/LeagueService';
 import { isAuthenticated } from '../../util/auth';
 import PropTypes from 'prop-types';
@@ -45,14 +44,13 @@ class Body extends Component {
                 if (result) {
                     this.loadData();
                 } else {
-                    this.goToLogin();
+                    this.setIsAuthenticated(false);
                 }
             })
             .catch((error) => {
                 console.error('Error:', error);
             });
     }
-
 
     loadData() {
         leagueService.getAllLeagues(this.addLeagues, this.onErrror);
@@ -86,6 +84,9 @@ class Body extends Component {
     }
 
     dispatchAction = (action) => {
+        console.log("=====================================================")
+        console.log("Current state:")
+        console.log(this.state)
         const updatedState = globalStateReducer(this.state, action);
         this.setState(updatedState);
         console.log("=====================================================")
@@ -97,7 +98,7 @@ class Body extends Component {
         console.log("Error data:")
         console.log(data)
         if (data.response !== undefined && JSON.stringify(data.response).includes('The Token has expired')) {
-            AuthService.refreshToken(this.onRefreshTokenExpired);
+            this.setIsAuthenticated(false)
         } else if (data.code !== undefined && data.code === 'ERR_NETWORK') {
             this.addError("Cannot connect to server at this time.\nTry again later");
             this.setIsAuthenticated(false)
@@ -115,21 +116,6 @@ class Body extends Component {
             },
         })
     };
-
-    goToLogin = () => {
-        this.setIsAuthenticated(false);
-    };
-
-    onRefreshTokenExpired = (data) => {
-        if (data.code !== undefined && data.code === "ERR_NETWORK") {
-            this.addError("Cannot connect to server, try again later!");
-            this.setIsAuthenticated(false)
-        } else {
-            this.addError("Session has ended!");
-            this.setIsAuthenticated(false)
-        }
-
-    }
 
     removeError = (index) => {
         this.dispatchAction({
@@ -163,7 +149,7 @@ class Body extends Component {
     render() {
         // You can pass the state and methods to child components as props
         return (
-            <div className={"unselectable-text row min-vh-md-100"}>
+            <div className={"unselectable-text row min-vh-md-100 p-md-2"}>
                 <div className="error-container">
                     {this.state.errors !== undefined && this.state.errors.length !== 0
                         ? this.state.errors.map((error, index) => (
@@ -222,8 +208,8 @@ class Body extends Component {
     }
 }
 
-
 Body.propTypes = {
     setIsAuthenticated: PropTypes.func.isRequired, // Define the 'history' prop
 };
+
 export default Body;

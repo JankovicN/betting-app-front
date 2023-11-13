@@ -1,7 +1,7 @@
 .footer {
     background: var(--color-primary);
     color: var(--color-white);
-    height: 30vh;
+    min-height: 30vh;
 }
 
 

@@ -1,0 +1,62 @@
+.state-- {
+    background-color: #ccc;
+    color: #313131;
+    font-weight: 600;
+
+}
+
+.state-WIN {
+    background-color: #d4edda;
+    color: #418852;
+    font-weight: 600;
+}
+
+.state-LOSS {
+    background-color: #f8d7da;
+    color: #863e44;
+    font-weight: 600;
+}
+
+td.state-- {
+    color: #ccc;
+}
+
+td.state-WIN {
+    color: #84d398;
+
+}
+
+td.state-LOSS {
+    color: #ca737a;
+}
+
+.ticket_details {
+    width: 100vw !important;
+}
+
+.column_name {
+    font-size: 1.3em;
+    font-weight: 400;
+}
+
+.ticket_detials_header_text {
+    margin-top: 5px;
+    font-size: 15px;
+}
+
+.modal_header {
+    width: 100%;
+}
+
+.ticket_details_section {
+    background-color: var(--color-white);
+    color: var(--color-primary);
+}
+
+.modal_close {
+    font-size: 30px;
+    cursor: pointer;
+    color: black !important;
+    z-index: 1000;
+    border: none;
+}
