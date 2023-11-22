@@ -17,6 +17,13 @@
     font-weight: 600;
 }
 
+.state-CANCELED {
+    background-color: #ff4f4f;
+    color: rgb(10, 8, 8);
+    font-weight: 600;
+}
+
+
 td.state-- {
     color: #ccc;
 }
@@ -28,6 +35,10 @@ td.state-WIN {
 
 td.state-LOSS {
     color: #ca737a;
+}
+
+td.state-CANCELED {
+    color: #ff4f4f;
 }
 
 .ticket_details {

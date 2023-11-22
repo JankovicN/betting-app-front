@@ -287,6 +287,12 @@ div {
     margin-left: calc(var(--bs-gutter-x) * -.5);
 }
 
+.rounded_shadow{
+    
+    border-radius: 10px 10px 10px 10px;
+    box-shadow: 0 12px 24px rgba(0, 0, 0, 0.5) !important;
+}
+
 .centered_container {
     display: flex;
     align-items: center;
@@ -295,6 +301,38 @@ div {
     color: var(--color-white);
 }
 
+.pagination {
+    margin-top: 10px;
+    display: flex;
+    justify-content: center;
+}
+
+.pagination span {
+    cursor: pointer;
+    padding: 8px 12px;
+    margin: 0 5px;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+}
+
+.pagination span.active {
+    background-color: var(--color-primary-light);
+    color: #fff;
+    border: 1px solid var(--color-primary-light);
+}
+
+.blue_button {
+    border-radius: 4px;
+    background-color: var(--color-primary-light);
+    color: #fff;
+    border: 1px solid var(--color-primary-light);
+}
+
+
+.user_balance_container{
+    background-color: var(--color-primary);
+    color:white
+}
 
 /*
   Error CSS
@@ -311,6 +349,7 @@ div {
     flex-direction: column;
     align-items: flex-start;
     opacity: 90%;
+    width: 60vw;
     /* Align error messages to the right */
 }
 
@@ -332,6 +371,13 @@ div {
     /* Align error messages to the right */
 }
 
+.shadow {
+    box-shadow: 0 12px 24px rgba(0, 0, 0, 0.5) !important;
+}
+
+.transition {
+    transition: all 0.3s ease;
+}
 
 /*
     PADDING AND MARGIN CLASSES

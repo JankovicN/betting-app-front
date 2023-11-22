@@ -14,10 +14,10 @@ const playTicket = (ticket, onSuccess, onError) => {
         });
 };
 
-const getUserTickets = (username, onSuccess, onError) => {
+const getUserTickets = (username, page, onSuccess, onError) => {
     console.log("=====================================================")
     console.log(`Fetching all tickets for user = ${username}`)
-    api.get('/ticket/get', { params: { username } })
+    api.get('/ticket/get', { params: { username, page } })
         .then((response) => {
             console.log(response.data.data)
             onSuccess(response.data.data);
@@ -27,7 +27,77 @@ const getUserTickets = (username, onSuccess, onError) => {
         });
 };
 
+const getUserCancelTickets = ( username, page, onSuccess, onError) => {
+    console.log("=====================================================")
+    console.log(`Fetching all cancelable tickets for user = ${username}`)
+    api.get('/ticket/get/cancelable', { params: { username, page } })
+        .then((response) => {
+            console.log(response.data.data)
+            onSuccess(response.data.data);
+        })
+        .catch((error) => {
+            onError(error);
+        });
+};
+
+const getAllTickets = ( page, onSuccess, onError) => {
+    console.log("=====================================================")
+    console.log(`Fetching all tickets`)
+    api.get('/ticket/get/all', { params: { page } })
+        .then((response) => {
+            console.log(response.data.data)
+            onSuccess(response.data.data);
+        })
+        .catch((error) => {
+            onError(error);
+        });
+};
+
+const getAllCancelTickets = ( page, onSuccess, onError) => {
+    console.log("=====================================================")
+    console.log(`Fetching all cancelable tickets`)
+    api.get('/ticket/get/cancelable', { params: { page } })
+        .then((response) => {
+            console.log(response.data.data)
+            onSuccess(response.data.data);
+        })
+        .catch((error) => {
+            onError(error);
+        });
+};
+
+const cancelTicket = ( ticket, onSuccess, onError) => {
+    console.log("=====================================================")
+    console.log(`Canceling ticket ${ticket.id}`)
+    api.delete('/ticket/delete', { params: { ticketID: ticket.id } })
+        .then((response) => {
+            console.log(response.data)
+            onSuccess(response.data);
+        })
+        .catch((error) => {
+            onError(error);
+        });
+};
+
+const updateTickets = (onSuccess, onError) => {
+    console.log("=====================================================")
+    console.log(`Updating all tickets`)
+    api.patch('/ticket/update')
+        .then((response) => {
+            console.log(response.data)
+            onSuccess(response.data);
+        })
+        .catch((error) => {
+            onError(error);
+        });
+};
+
 export default {
     playTicket,
-    getUserTickets
+    getUserTickets,
+    getAllTickets,
+    getUserCancelTickets,
+    getAllCancelTickets,
+    cancelTicket,
+    updateTickets
 };

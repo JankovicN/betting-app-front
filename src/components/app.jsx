@@ -3,13 +3,36 @@ import HomePage from './home/HomePage';
 import Login from './auth/Login';
 import Register from './auth/Register';
 import UserPage from './user/UserPage';
+import ErrorPage from './common/ErrorPage';
 import { isAuthenticated, isUserAdmin } from '../util/auth';
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
+import AdminPage from './admin/AdminPage';
+import UserDetails from './admin/UserDetails';
 
 
 const App = () => {
-  const [authenticated, setIsAuthenticated] = useState(isAuthenticated());
-  const [admin, setUserAdmin] = useState(isUserAdmin());
+  const [authenticated, setIsAuthenticated] = useState(null);
+  const [admin, setUserAdmin] = useState(null);
+
+  useEffect(() => {
+    const fetchData = async () => {
+      try {
+        const authStatus = await isAuthenticated();
+        setIsAuthenticated(authStatus);
+        const adminStatus = await isUserAdmin();
+        setUserAdmin(adminStatus);
+      } catch (error) {
+        console.error('Error fetching admin status:', error);
+      }
+    };
+
+    fetchData();
+  }, []);
+
+  if (admin === null || authenticated=== null) {
+    // Admin status is still being fetched, you can show a loading indicator or handle it accordingly
+    return <div></div>;
+  }
 
   return (
     <Router>
@@ -20,14 +43,29 @@ const App = () => {
         <Route path='/register' element={<Register />} />
         <Route
           path='/'
+          element={
+            authenticated ? (
+              admin ? (
+                <AdminPage setIsAuthenticated={setIsAuthenticated} />
+              ) : (
+                <HomePage setIsAuthenticated={setIsAuthenticated} />
+              )
+            ) : (
+              <Navigate to="/login" />
+            )
+          }
+        />
+        <Route
+          path='/profile'
+          element={authenticated ? (admin ? <ErrorPage /> : <UserPage setIsAuthenticated={setIsAuthenticated} />) : <Navigate to="/login" />} />
+        <Route
+          path='/user/:username'
           element={authenticated ?
-            admin ? <HomePage setIsAuthenticated={setIsAuthenticated} /> : <HomePage setIsAuthenticated={setIsAuthenticated} />
+            admin ? <UserDetails setIsAuthenticated={setIsAuthenticated} /> : <ErrorPage />
             : <Navigate to="/login" />} />
         <Route
-          path='/user'
-          element={authenticated ?
-            admin ? <UserPage setIsAuthenticated={setIsAuthenticated} /> : <UserPage setIsAuthenticated={setIsAuthenticated} />
-            : <Navigate to="/login" />} />
+          path='/*'
+          element={<ErrorPage />} />
       </Routes>
     </Router>
   );

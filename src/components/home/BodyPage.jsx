@@ -108,23 +108,26 @@ class Body extends Component {
 
     }
 
-    addError = (data) => {
+    addError = async (data) => {
         this.dispatchAction({
             type: 'ADD_ERRORS', // Specify the action type
             payload: {
                 errorsToAdd: data
             },
         })
-    };
 
-    removeError = (index) => {
+        const delay = (ms) => new Promise(resolve => setTimeout(resolve, ms));
+
+        // Use async/await to pause execution without blocking the entire app
+        await delay(3000);
+
         this.dispatchAction({
-            type: 'REMOVE_ERROR', // Specify the action type
+            type: 'REMOVE_ERROR',
             payload: {
-                index: index
+                errorMessages: data
             },
-        })
-    }
+        });
+    };
 
     handleShowLeaguesModal = () => {
         console.log("Opening leagues modal: " + this.state.showLeaguesModal);
@@ -150,14 +153,8 @@ class Body extends Component {
         // You can pass the state and methods to child components as props
         return (
             <div className={"unselectable-text row min-vh-md-100 p-md-2"}>
-                <div className="error-container">
-                    {this.state.errors !== undefined && this.state.errors.length !== 0
-                        ? this.state.errors.map((error, index) => (
-                            <ErrorAlert key={index} error={error} removeError={() => this.removeError(index)} />
-                        )
-                        ) : <></>
-                    }
-                </div>
+
+                <ErrorAlert errorMessages={this.state.errors} />
                 <div className="col-12 mb-2">
                     <div className="row">
                         <div className="col-6 d-md-none" >

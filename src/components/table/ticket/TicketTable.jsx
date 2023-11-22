@@ -8,7 +8,7 @@ const TicketTable = ({ ticketList, onRowClick }) => {
         <tr>
           <th className='text-center'>Date</th>
           <th className='text-center'>Wager</th>
-          <th className='text-center'>Odds</th>
+          <th className='text-center d-none d-md-table-cell'>Odds</th>
           <th className='text-center'>Win</th>
           <th className='text-center'>State</th>
         </tr>
@@ -28,7 +28,7 @@ const TicketTable = ({ ticketList, onRowClick }) => {
             <tr key={ticket.id} className={`state-${ticket.state}`} onClick={() => onRowClick(ticket)}>
               <td className='text-center'>{ticket.dateOfPlay.split(' ')[0]}</td>
               <td className='text-center'>{ticket.wager}</td>
-              <td className='text-center'>{ticket.totalOdd}</td>
+              <td className='text-center d-none d-md-table-cell'>{ticket.totalOdd}</td>
               <td className='text-center'>{ticket.totalWin}</td>
               <td className='text-center'>{ticket.state}</td>
             </tr>

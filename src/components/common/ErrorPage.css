@@ -1,0 +1,35 @@
+/* styles.css or ErrorPage.css */
+.error-page-container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  height: 100vh;
+  text-align: center;
+}
+
+.error-page-title {
+  font-size: 4rem;
+  color: var(--color-primary);
+  /* red color */
+  margin-bottom: 10px;
+}
+
+.error-page-message {
+  font-size: 1.5rem;
+  color: var(--color-gray);
+}
+
+.error-page-button {
+  font-size: 1.5rem;
+  color: var(--color-primary);
+  background-color: var(--color-white);
+  transition: all 0.3s ease;
+}
+
+.error-page-button:hover {
+  font-size: 1.5rem;
+  letter-spacing: 2px;
+  color: var(--color-white);
+  background-color: var(--color-gray);
+}

@@ -1,0 +1,9 @@
+.dashboard_body {
+    background-color: var(--color-);
+    color: black;
+}
+
+.user_information_body{
+    background-color: var(--color-beige);
+    color: black;
+}

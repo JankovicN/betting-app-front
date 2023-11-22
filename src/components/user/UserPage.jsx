@@ -8,7 +8,7 @@ const UserPage = ({ setIsAuthenticated }) => {
 
     return (
         <div className=''>
-            <Header />
+            <Header setIsAuthenticated={setIsAuthenticated}/>
             <User setIsAuthenticated={setIsAuthenticated} />
             <Footer />
         </div>

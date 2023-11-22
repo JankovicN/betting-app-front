@@ -16,6 +16,7 @@ export async function isUserAdmin() {
   const admin = Cookies.get('admin');
 
   if (admin) {
+    console.log("ADMIN ADMIN ADMIN!");
     return true;
   }
 

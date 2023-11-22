@@ -1,23 +1,23 @@
-import { useEffect } from 'react';
 import PropTypes from 'prop-types';
 
+const InfoMessages = ({ infoMessages }) => {
+    return (
+        <div className="error-container">
+            {infoMessages !== undefined && infoMessages.length !== 0
+                ?
+                infoMessages.map((infoMessage, index) => (
+                    <div key={index} className="alert alert-info" role="alert">
+                        {infoMessage}
+                    </div>
+                ))
+                : <></>
+            }
+        </div>
+    )
 
-const InfoMessage = ({ message, removeInfoMessage }) => {
-    useEffect(() => {
-        const timer = setTimeout(() => {
-            removeInfoMessage();
-        }, 3000); // Automatically remove the error message after 3 seconds
-
-        return () => {
-            clearTimeout(timer);
-        };
-    }, [removeInfoMessage]);
-
-    return <div className="alert alert-info" role="alert">{message}</div>;
 };
 
-InfoMessage.propTypes = {
-    message: PropTypes.string.isRequired,
-    removeInfoMessage: PropTypes.func.isRequired
+InfoMessages.propTypes = {
+    infoMessages: PropTypes.array.isRequired,
 };
-export default InfoMessage;
+export default InfoMessages;

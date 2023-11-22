@@ -1,6 +1,6 @@
 import classes from './Auth.module.css'
 import { useNavigate } from 'react-router-dom';
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import AuthService from '../../service/AuthService';
 import PropTypes from 'prop-types';
 import Cookies from 'js-cookie';
@@ -9,6 +9,14 @@ const Login = ({ setIsAuthenticated, setUserAdmin }) => {
   const navigate = useNavigate();
   const [formData, setFormData] = useState({ username: '', password: '' });
   const [errorMessage, setErrorMessage] = useState('');
+  const [infoMessage, setInfoMessage] = useState('');
+
+  useEffect(() => {
+    const registered = Cookies.get('registered')
+    if (registered) {
+      setInfoMessage('Successfully registered')
+    }
+  }, [])
 
   const handleInputChange = (e) => {
     const { name, value } = e.target;
@@ -16,15 +24,25 @@ const Login = ({ setIsAuthenticated, setUserAdmin }) => {
   };
 
   const onSuccessFunction = () => {
-    console.log("Successfully logged in ");
-    setIsAuthenticated(true);
+    console.log("checking cookies")
+    console.log(Cookies.get("admin"))
     if (Cookies.get("admin")) {
       setUserAdmin(true)
     }
+    if (infoMessage !== '') {
+      setInfoMessage('')
+      Cookies.remove('registered')
+    }
+    console.log("Successfully logged in ");
+    setIsAuthenticated(true);
     navigate('/');
   };
 
   const onErrorFunction = (error) => {
+    if (infoMessage !== '') {
+      setInfoMessage('')
+      Cookies.remove('registered')
+    }
     if (error.code !== undefined) {
       if (error.code === 'ERR_NETWORK') {
         const networkError = (
@@ -50,6 +68,10 @@ const Login = ({ setIsAuthenticated, setUserAdmin }) => {
   };
 
   const loginAction = () => {
+    if (infoMessage !== '') {
+      setInfoMessage('')
+      Cookies.remove('registered')
+    }
     const { username, password } = formData;
     setErrorMessage("");
     AuthService.login(
@@ -76,7 +98,7 @@ const Login = ({ setIsAuthenticated, setUserAdmin }) => {
   return (
     <div className={`unselectable-text ${classes.auth_container}`}>
 
-      <form className={` ${classes.form_container}`}>
+      <form className={` ${classes.login_container}`}>
         <h3 className="fs-1 text_center">Sign In</h3>
 
         <div className="fs-4 mt-5">
@@ -101,6 +123,7 @@ const Login = ({ setIsAuthenticated, setUserAdmin }) => {
         </div>
 
         {errorMessage && <p className='mt-2 p-1 fs-5 fw-bold text-center text-danger'>{errorMessage}</p>}
+        {infoMessage && <p className='mt-2 p-1 fs-5 fw-bold text-center text-info'>{infoMessage}</p>}
         <div className="d-grid gap-2 mt-5">
           <button type="button" className="btn btn-primary" onClick={loginAction}>
             Submit

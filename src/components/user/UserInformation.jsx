@@ -5,7 +5,7 @@ import PaymentService from "../../service/PaymentService";
 
 
 
-const UserInformation = ({ username, setIsAuthenticated, onError, setError, setInfoMessage }) => {
+const UserInformation = ({ username, setIsAuthenticated, onError, addError, addInfoMessages }) => {
 
     const [userData, setUserData] = useState(null);
     const depositInputRef = React.createRef();
@@ -16,10 +16,9 @@ const UserInformation = ({ username, setIsAuthenticated, onError, setError, setI
             UserService.getUserInformation(username, onSuccessUserData, onError);
         } else {
             setIsAuthenticated(false)
-            setError("Username is missing!")
+            addError(["Username is missing!"])
         }
     }, [])
-
 
     const updateUser = () => {
         const currentUserData = userData;
@@ -29,9 +28,9 @@ const UserInformation = ({ username, setIsAuthenticated, onError, setError, setI
     const attemptDeposit = () => {
         const depositAmount = depositInputRef.current.value;
         if (depositAmount === undefined || depositAmount === null || depositAmount < 0) {
-            setError("Invalid deposit amount!");
+            addError(["Invalid deposit amount!"]);
         } else if (depositAmount < 500) {
-            setError("Deposit Amount must be above 500!");
+            addError(["Deposit Amount must be above 500!"]);
         } else {
             PaymentService.depositAmount(userData.id, depositAmount, onSuccessfullTranasction, onError)
         }
@@ -41,7 +40,7 @@ const UserInformation = ({ username, setIsAuthenticated, onError, setError, setI
     const attemptWithdraw = () => {
         const withdrawAmount = withdrawInputRef.current.value;
         if (withdrawAmount === undefined || withdrawAmount === null || withdrawAmount < 0) {
-            setError("Invalid withdraw amount!");
+            addError(["Invalid withdraw amount!"]);
         } else {
             PaymentService.withdrawAmount(userData.id, withdrawAmount, onSuccessfullTranasction, onError)
         }
@@ -51,16 +50,18 @@ const UserInformation = ({ username, setIsAuthenticated, onError, setError, setI
     const onSuccessUserData = (data) => {
         if (data !== undefined && data !== null) {
             setUserData(data);
+        } else {
+            onError(data)
         }
     }
 
     const onSuccessfullTranasction = (data) => {
         console.log("Transaction successfull")
         console.log(data)
-        console.log(data[0])
+        console.log(data)
         if (data !== undefined && data !== null && data.length > 0) {
-            const infoMessage = data[0];
-            setInfoMessage(infoMessage)
+            const infoMessage = data;
+            addInfoMessages(infoMessage)
         }
         PaymentService.getUserBalance(userData.id, onSuccessBalanceRequest, onError)
     }
@@ -76,16 +77,13 @@ const UserInformation = ({ username, setIsAuthenticated, onError, setError, setI
         console.log("Successfully updated user")
         console.log(data)
         if (data !== undefined && data !== null) {
-            setUserData(data)
-            setInfoMessage("Successfully updated user");
+            setUserData(data.data)
+            addInfoMessages(data.infoMessages);
         }
     }
 
     const handleInputChange = (e) => {
         const { name, value } = e.target;
-        console.log("changing field")
-        console.log(name)
-        console.log(value)
         setUserData((prevUserData) => ({
             ...prevUserData,
             [name]: value,
@@ -95,12 +93,12 @@ const UserInformation = ({ username, setIsAuthenticated, onError, setError, setI
     return (
         <>
             {userData !== null ?
-                <div className="unselectable-text light_border p-3 row m-auto mb-3 ms-3 me-3">
-                    <div className='text_center fs-3'>
-                        User Information
+                <div className="unselectable-text rounded_border p-3 row m-auto mb-3">
+                    <div className='text_center fs-3 p-3 fw-bold'>
+                        User {userData.username} Information
                     </div>
                     <div className='p-3 row  m-auto mb-md-3'>
-                        <div className='col-12 col-md-6 p-md-3 light_border_left'>
+                        <div className='col-12 col-md-6 p-md-3 '>
                             <div className="ps-md-5 ms-md-5 mb-3">
                                 <div className='col-12 col-md-4 fs-6 mb-0'>
                                     <label>Username:</label>
@@ -176,17 +174,17 @@ const UserInformation = ({ username, setIsAuthenticated, onError, setError, setI
                                 <div className='col-4  fs-5 mb-0 m-auto'>
                                 </div>
                                 <div className='col-12 col-md-8'>
-                                    <button className=' fs-5 pt-1 pb-1 w-100' onClick={updateUser}>Update User Information</button>
+                                    <button className=' fs-5 pt-1 pb-1 w-100 blue_button' onClick={updateUser}>Update User Information</button>
                                 </div>
                             </div>
                         </div>
-                        <div className='col-12 col-md-6 p-3 light_border'>
+                        <div className='col-12 col-md-6 p-3 rounded_border shadow user_balance_container'>
                             <div className="m-auto mt-4">
                                 <div className='fs-3 mb-3 pb-3 text-center'>
                                     User balance: {userData.balance} RSD
                                 </div>
                                 <div className="pt-3 mb-2 col-12 col-md-8  m-auto">
-                                    <div className='col-12   fs-6 mb-2'>
+                                    <div className='col-12  fs-5 mb-2'>
                                         <label >Deposit:</label>
                                     </div>
                                     <div className='col-12 mb-2'>
@@ -198,11 +196,11 @@ const UserInformation = ({ username, setIsAuthenticated, onError, setError, setI
                                         />
                                     </div>
                                     <div className='col-12'>
-                                        <button className=' fs-5 pt-1 pb-1 w-100' onClick={attemptDeposit}>Deposit Amount</button>
+                                        <button className=' fs-5 pt-1 pb-1 w-100 blue_button' onClick={attemptDeposit}>Deposit Amount</button>
                                     </div>
                                 </div>
                                 <div className="pt-3 mb-2 col-12 col-md-8  m-auto">
-                                    <div className='col-12   fs-6 mb-2'>
+                                    <div className='col-12 fs-5 mb-2'>
                                         <label>Withdraw:</label>
                                     </div>
                                     <div className='col-12 mb-2'>
@@ -214,7 +212,7 @@ const UserInformation = ({ username, setIsAuthenticated, onError, setError, setI
                                         />
                                     </div>
                                     <div className='col-12'>
-                                        <button className='fs-5 pt-1 pb-1 w-100' onClick={attemptWithdraw}>Withdraw Amount</button>
+                                        <button className='fs-5 pt-1 pb-1 w-100 blue_button' onClick={attemptWithdraw}>Withdraw Amount</button>
                                     </div>
                                 </div>
                             </div>
@@ -228,9 +226,9 @@ const UserInformation = ({ username, setIsAuthenticated, onError, setError, setI
 UserInformation.propTypes = {
     setIsAuthenticated: PropTypes.func.isRequired,
     onError: PropTypes.func.isRequired,
-    setError: PropTypes.func.isRequired,
-    setInfoMessage: PropTypes.func.isRequired,
-    username: PropTypes.object.isRequired
+    addError: PropTypes.func.isRequired,
+    addInfoMessages: PropTypes.func.isRequired,
+    username: PropTypes.string.isRequired
 };
 
 export default UserInformation;

@@ -1,23 +1,20 @@
-import { useEffect } from 'react';
 import PropTypes from 'prop-types';
 
+const ErrorAlert = ({ errorMessages }) => {
 
-const ErrorAlert = ({ error, removeError }) => {
-    useEffect(() => {
-        const timer = setTimeout(() => {
-            removeError();
-        }, 3000); // Automatically remove the error message after 3 seconds
+    return <div className="error-container">
+        {errorMessages !== undefined && errorMessages.length !== 0
+            ? errorMessages.map((error, index) => (
 
-        return () => {
-            clearTimeout(timer);
-        };
-    }, [removeError]);
+                <div key={index} className="alert alert-danger" role="alert">{error}</div>
+            )
+            ) : <></>
+        }
+    </div>
 
-    return <div className="alert alert-danger" role="alert">{error}</div>;
 };
 
 ErrorAlert.propTypes = {
-    error: PropTypes.string.isRequired,
-    removeError: PropTypes.func.isRequired
+    errorMessages: PropTypes.array,
 };
 export default ErrorAlert;

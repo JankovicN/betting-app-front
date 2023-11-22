@@ -28,6 +28,7 @@ const TicketWager = ({ ticketData, action, onError }) => {
             payload: {
             },
         });
+        setInputValue(20);
     }
 
     function playTicket() {

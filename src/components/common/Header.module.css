@@ -2,5 +2,5 @@
     background: var(--color-primary);
     color: var(--color-white);
     min-height: 10vh;
+    box-shadow: 0 8px 16px rgba(0, 0, 0, 0.4);
 }
-

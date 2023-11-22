@@ -6,7 +6,7 @@ import classes from './Fixture.module.css'
 
 const Fixture = ({ fixture, action, ticket, onError }) => {
 
-    var fixtureOdds = useRef([]);
+    const fixtureOdds = useRef([]);
     const [dontShowOdds, setShowOdds] = useState(true);
 
     const addOdd = (betGroup, odd) => {
@@ -79,7 +79,7 @@ const Fixture = ({ fixture, action, ticket, onError }) => {
                 </div>
                 <div className="col-11 col-md-6  p-0 d-flex flex-wrap justify-content-evenly ">
                     {fixture.betGroupList[0].odds.map(odd => {
-                        var betGroup = fixture.betGroupList[0];
+                        const betGroup = fixture.betGroupList[0];
                         return (
                             <button
                                 className={`${checkIfSelected(betGroup.id, odd.id) ? 'odd_button_selected' : 'odd_button'} fs-6 border rounded border-secondary`}
@@ -106,7 +106,7 @@ const Fixture = ({ fixture, action, ticket, onError }) => {
 
                             <div className=' mb-3 d-flex flex-wrap justify-content-evenly'>
                                 {bg.odds.map(odd => {
-                                    var betGroup = bg;
+                                    const betGroup = bg;
                                     return (
                                         <button
                                             key={odd.id}

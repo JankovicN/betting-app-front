@@ -13,6 +13,7 @@ const login = (username, password, onSuccess, onError) => {
                 setAuthToken(responseObject.access_token);
                 setUsername(username);
                 checkIfUserIsAdmin(responseObject.access_token);
+                
                 onSuccess();
             } else {
                 onError(response);
@@ -29,15 +30,11 @@ const register = (userData, onSuccess, onError) => {
     api
         .post('/user/register', userData)
         .then((response) => {
+            console.log(response)
             onSuccess(response);
         })
         .catch((error) => {
-            if (error === undefined || error.response === undefined) {
-                console.log(error)
-            } else {
-                console.log(error)
-                onError(error);
-            }
+            onError(error);
         });
 };
 

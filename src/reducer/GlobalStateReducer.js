@@ -1,23 +1,6 @@
 /* eslint-disable no-const-assign */
 /* eslint-disable no-case-declarations */
 
-// State JSON structure
-// {
-//     wager: 20,
-//     totalOdd: 1,
-//     totalWin: 0,
-//     bets: [
-//     ],
-// }
-
-// let currentFixtures;
-// let currentSelectedLeagues;
-// let currentTicketBets;
-// let currentTotalOdds;
-// let currentWager;
-// let currentTotalWin;
-// let currentErrors;
-
 
 const globalStateReducer = (state, action) => {
     switch (action.type) {
@@ -216,12 +199,14 @@ const globalStateReducer = (state, action) => {
         case 'REMOVE_ERROR':
             console.log("=====================================================")
             console.log(`ACTION: Removing error`)
-            const { index } = action.payload;
+            const { errorMessages } = action.payload;
+            console.log(errorMessages)
             const clonedErrors = [...state.errors];
-            clonedErrors.splice(index, 1);
+            const errorsAfterRemoval = clonedErrors.filter((message) => !errorMessages.includes(message))
+            console.log(errorsAfterRemoval)
             return {
                 ...state,
-                errors: clonedErrors
+                errors: errorsAfterRemoval
             };
 
         default:
