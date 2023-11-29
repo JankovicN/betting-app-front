@@ -25,7 +25,7 @@ class Body extends Component {
         this.setIsAuthenticated = props.setIsAuthenticated;
 
         this.state = {
-            leagues: [],
+            leagues: undefined,
             selectedLeagues: [],
             fixtures: [],
             ticket: initialData,

@@ -16,8 +16,9 @@ const Fixtures = ({ fixtureData, action, onError }) => {
                             {l.name}
                         </div>
                         {l.fixtures.map(f => {
+                            const last = l.fixtures[l.fixtures.length-1].id;
                             return (
-                                <Fixture key={f.id} fixture={f} action={action} ticket={fixtureData.ticket} onError={onError} />
+                                <Fixture key={f.id} fixture={f} action={action} ticket={fixtureData.ticket} onError={onError} last = {last}/>
                             )
                         })}
                     </div>

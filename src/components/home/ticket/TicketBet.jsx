@@ -25,7 +25,7 @@ const TicketBet = ({ bet, action }) => {
             </div>
             <div className="row">
                 <div className='col-6 text-start fs-6'>
-                    {bet.betGroupName}
+                    {bet.oddGroupName}
                 </div>
                 <div className='col-4 text-end fs-6 '>
                     {bet.oddName}

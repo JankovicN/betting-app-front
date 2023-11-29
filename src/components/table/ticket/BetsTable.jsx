@@ -29,7 +29,7 @@ const BetsTable = ({ bets }) => {
                             </div>
                         </td >
                         <td>
-                            <div className='text_center align-middle '>{bet.betGroupName} <br /><span className='column_name'>{bet.name}</span></div></td>
+                            <div className='text_center align-middle '>{bet.oddGroupName} <br /><span className='column_name'>{bet.name}</span></div></td>
                         <td className='text_center align-middle'>{bet.result}</td>
                         <td className='text_center align-middle'>
                             {new Date(bet.fixtureDate).toLocaleDateString()}

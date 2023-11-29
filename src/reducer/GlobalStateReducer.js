@@ -12,8 +12,8 @@ const globalStateReducer = (state, action) => {
                 home,
                 away,
                 date,
-                betGroupId,
-                betGroupName,
+                oddGroupId,
+                oddGroupName,
                 oddId,
                 oddName,
                 odd
@@ -29,8 +29,8 @@ const globalStateReducer = (state, action) => {
             if (existingBetIndex !== -1) {
                 // Update existing bet
                 const currentBet = updatedTicket.bets[existingBetIndex];
-                currentBet.betGroupId = betGroupId;
-                currentBet.betGroupName = betGroupName;
+                currentBet.oddGroupId = oddGroupId;
+                currentBet.oddGroupName = oddGroupName;
                 currentBet.oddId = oddId;
                 currentBet.oddName = oddName;
                 currentBet.odd = odd;
@@ -41,8 +41,8 @@ const globalStateReducer = (state, action) => {
                     home,
                     away,
                     date,
-                    betGroupId,
-                    betGroupName,
+                    oddGroupId,
+                    oddGroupName,
                     oddId,
                     oddName,
                     odd,

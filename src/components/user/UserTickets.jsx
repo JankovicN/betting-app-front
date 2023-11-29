@@ -16,6 +16,7 @@ const UserTickets = ({ username, onError }) => {
 
 
     useEffect(() => {
+        console.log("rendering")
         const firstPage = 0;
         fetchNewPage(firstPage);
     }, [])

@@ -18,6 +18,7 @@ const AdminBody = ({ setIsAuthenticated }) => {
     const firstPage = 0;
     const navigate = useNavigate();
     const [users, setUsers] = useState([]);
+    const [rerender, setRerender] = useState(1);
     const [errorMessages, setErrorMessages] = useState([]);
     const [infoMessages, setInfoMessages] = useState([]);
     const [userFilterField, setUserFilterField] = useState('');
@@ -37,7 +38,7 @@ const AdminBody = ({ setIsAuthenticated }) => {
     }
 
     const updateTicketsApiCall = () => {
-        TicketService.updateTickets(onSuccessApiCall, onError);
+        TicketService.updateTickets(onSuccessUpdateTicketsApiCall, onError);
     }
 
     const filterUsersApiCall = () => {
@@ -54,6 +55,11 @@ const AdminBody = ({ setIsAuthenticated }) => {
         if (data !== undefined && data !== null && data.content !== undefined && data.content !== null) {
             setUsers(data.content)
         }
+    }
+
+    const onSuccessUpdateTicketsApiCall = (data) =>{
+        onSuccessApiCall(data)
+        setRerender(prevCount => prevCount + 1);
     }
 
     const onSuccessApiCall = (data) => {
@@ -161,7 +167,7 @@ const AdminBody = ({ setIsAuthenticated }) => {
             <div className='rounded_border mt-5 p-3 p-md-5'>
                 <div className='fs-2 text-center'>All Tickets</div>
                 <div  className=' pt-3 '>
-                    <UserTickets onError={onError} />
+                    <UserTickets key = {rerender} onError={onError}/>
                 </div>
             </div>
 

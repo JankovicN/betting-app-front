@@ -24,7 +24,7 @@ const LeaguesModal = ({ show, action, onClose, allLeagues, selectedLeagues, onEr
 LeaguesModal.propTypes = {
     action: PropTypes.func.isRequired,
     onError: PropTypes.func.isRequired,
-    allLeagues: PropTypes.array.isRequired,
+    allLeagues: PropTypes.array,
     selectedLeagues: PropTypes.array.isRequired,
     show: PropTypes.bool.isRequired,
     onClose: PropTypes.func.isRequired,

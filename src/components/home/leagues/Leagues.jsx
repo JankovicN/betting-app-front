@@ -56,16 +56,22 @@ const Leagues = ({ action, allLeagues, selectedLeagues, onError }) => {
             </div>
             <div className="mb-1" />
 
-            {allLeagues.length === 0 ? (
+            {allLeagues === undefined ?
                 // Loading state
                 <div className="centered_container">
                     <p>Loading...</p>
                 </div>
-            ) : (
-                <>
-                    {allLeagues.map(l => <LeagueButton key={l.id} league={l} updateLeagues={selectLeague} selectedLeagues={selectedLeagues} />)}
-                </>
-            )}
+                :
+                allLeagues.length === 0 ? (
+                    // Loading state
+                    <div className="centered_container">
+                        <p>No  Fixtures Avaliable</p>
+                    </div>
+                ) : (
+                    <>
+                        {allLeagues.map(l => <LeagueButton key={l.id} league={l} updateLeagues={selectLeague} selectedLeagues={selectedLeagues} />)}
+                    </>
+                )}
 
         </div>
     );
@@ -74,7 +80,7 @@ const Leagues = ({ action, allLeagues, selectedLeagues, onError }) => {
 Leagues.propTypes = {
     action: PropTypes.func.isRequired,
     onError: PropTypes.func.isRequired,
-    allLeagues: PropTypes.array.isRequired,
+    allLeagues: PropTypes.array,
     selectedLeagues: PropTypes.array.isRequired
 };
 
