@@ -9,6 +9,7 @@ import InfoMessages from '../common/InfoMessage';
 import Footer from '../common/Footer';
 import './Admin.css';
 import UserTickets from '../user/UserTickets';
+import CancelTickets from './CancelTickets';
 
 function UserDetail({ setIsAuthenticated }) {
     const { username } = useParams();
@@ -82,11 +83,20 @@ function UserDetail({ setIsAuthenticated }) {
                         <div className='pb-4'>
                             <UserInformation username={username} setIsAuthenticated={setIsAuthenticated} onError={onError} addError={addError} addInfoMessages={addInfoMessages} />
                         </div>
-                        <div className='rounded_border mt-6 p-3'>
+                        <div className='rounded_border  p-3'>
                             <div className='text_center fs-3 p-4 fw-bold'>
                                 {username} Played tickets
                             </div>
                             <UserTickets username={username} onError={onError} addError={addError} />
+                        </div>
+                
+                        <div className='rounded_border mt-4 p-3'>
+                            <div className='text_center fs-3 p-4 fw-bold'>
+                                Cancelable Tickets
+                            </div>
+                            <div className=' pt-3 '>
+                                <CancelTickets username={username} addInfoMessages={addInfoMessages} onError={onError} />
+                            </div>
                         </div>
                     </div>
 

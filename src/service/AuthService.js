@@ -8,16 +8,12 @@ const login = (username, password, onSuccess, onError) => {
     api
         .post('/login', { username, password })
         .then((response) => {
-            const responseObject = response.data;
-            if (responseObject && responseObject.access_token) {
-                setAuthToken(responseObject.access_token);
-                setUsername(username);
-                checkIfUserIsAdmin(responseObject.access_token);
-                
-                onSuccess();
-            } else {
-                onError(response);
-            }
+            const responseObject = response.data.data;
+            setAuthToken(responseObject.accessToken);
+            setUsername(username);
+            checkIfUserIsAdmin(responseObject.accessToken);
+
+            onSuccess();
         })
         .catch((error) => {
             onError(error);

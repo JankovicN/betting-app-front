@@ -5,7 +5,7 @@ import PageNumbering from '../common/PageNumbering';
 import CancelableTicketsTable from '../table/ticket/CancelableTicketsTable';
 
 
-const CancelTickets = ({ addInfoMessages, onError }) => {
+const CancelTickets = ({ addInfoMessages, onError, username }) => {
     const firstPage = 0;
     const [ticketList, setCancelTicketList] = useState(undefined);
     const [currentPage, setCurrentPage] = useState(undefined);
@@ -14,7 +14,7 @@ const CancelTickets = ({ addInfoMessages, onError }) => {
 
     useEffect(() => {
         fetchNewPage(firstPage);
-    }, [])
+    }, [username])
 
     const onSuccessApiCall = (data) => {
         if (data.infoMessages !== undefined) {
@@ -39,7 +39,14 @@ const CancelTickets = ({ addInfoMessages, onError }) => {
     }
 
     const fetchNewPage = (page) => {
-        TicketService.getAllCancelTickets(page, onSuccessCancelTicketCall, onError);
+        console.log(page)
+        const params = {
+            page: page,
+            ...(username && username.length !== 0 && { username: username })
+        };
+        const apiCall = username ? TicketService.getUserCancelTickets : TicketService.getAllCancelTickets;
+
+        apiCall(params, onSuccessCancelTicketCall, onError);
     }
 
     return (
@@ -57,6 +64,7 @@ const CancelTickets = ({ addInfoMessages, onError }) => {
 CancelTickets.propTypes = {
     onError: PropTypes.func.isRequired,
     addInfoMessages: PropTypes.func.isRequired,
+    username: PropTypes.string
 };
 
 export default CancelTickets;

@@ -52,6 +52,7 @@ class Body extends Component {
             });
     }
 
+
     loadData() {
         leagueService.getAllLeagues(this.addLeagues, this.onErrror);
     }

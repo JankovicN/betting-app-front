@@ -22,7 +22,9 @@ const User = ({ setIsAuthenticated }) => {
         } else if (data.code !== undefined && data.code === 'ERR_NETWORK') {
             setIsAuthenticated(false)
         } else if (data.response !== undefined && data.response.data !== undefined && data.response.data.errorMessages !== undefined) {
-            if (!JSON.stringify(data.response).includes('Insufficient funds')) {
+            if (!JSON.stringify(data.response).includes('Insufficient funds')
+                && !JSON.stringify(data.response).includes('Invalid Email address')
+                && !JSON.stringify(data.response).includes('Unable to update user')) {
                 setIsAuthenticated(false)
             }
 
@@ -70,7 +72,7 @@ const User = ({ setIsAuthenticated }) => {
             <InfoMessages infoMessages={infoMessages} />
             <div className="min-vh-100 container">
                 <div className=" ms-3 me-3  unselectable-text">
-                    <UserInformation  setIsAuthenticated={setIsAuthenticated} username={username} onError={onError} addError={addError} addInfoMessages={addInfoMessages} />
+                    <UserInformation setIsAuthenticated={setIsAuthenticated} username={username} onError={onError} addError={addError} addInfoMessages={addInfoMessages} />
                 </div>
 
                 <div className="rounded_border p-3  ms-3 me-3  unselectable-text">

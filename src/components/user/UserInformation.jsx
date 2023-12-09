@@ -181,7 +181,7 @@ const UserInformation = ({ username, setIsAuthenticated, onError, addError, addI
                         <div className='col-12 col-md-6 p-3 rounded_border shadow user_balance_container'>
                             <div className="m-auto mt-4">
                                 <div className='fs-3 mb-3 pb-3 text-center'>
-                                    User balance: {userData.balance} RSD
+                                    User balance: {userData.balance.toFixed(2)} RSD
                                 </div>
                                 <div className="pt-3 mb-2 col-12 col-md-8  m-auto">
                                     <div className='col-12  fs-5 mb-2'>

@@ -14,10 +14,11 @@ const playTicket = (ticket, onSuccess, onError) => {
         });
 };
 
-const getUserTickets = (username, page, onSuccess, onError) => {
+const getUserTickets = (params, onSuccess, onError) => {
     console.log("=====================================================")
-    console.log(`Fetching all tickets for user = ${username}`)
-    api.get('/ticket/get', { params: { username, page } })
+    console.log(`Fetching all tickets for user = ${params.username}`)
+    console.log(params)
+    api.get('/ticket/get', { params: params })
         .then((response) => {
             console.log(response.data.data)
             onSuccess(response.data.data);
@@ -27,10 +28,10 @@ const getUserTickets = (username, page, onSuccess, onError) => {
         });
 };
 
-const getUserCancelTickets = ( username, page, onSuccess, onError) => {
+const getUserCancelTickets = ( params, onSuccess, onError) => {
     console.log("=====================================================")
-    console.log(`Fetching all cancelable tickets for user = ${username}`)
-    api.get('/ticket/get/cancelable', { params: { username, page } })
+    console.log(`Fetching all cancelable tickets for user = ${params.username}`)
+    api.get('/ticket/get/cancelable', { params: params })
         .then((response) => {
             console.log(response.data.data)
             onSuccess(response.data.data);
@@ -40,10 +41,11 @@ const getUserCancelTickets = ( username, page, onSuccess, onError) => {
         });
 };
 
-const getAllTickets = ( page, onSuccess, onError) => {
+const getAllTickets = ( params, onSuccess, onError) => {
     console.log("=====================================================")
     console.log(`Fetching all tickets`)
-    api.get('/ticket/get/all', { params: { page } })
+    console.log(params)
+    api.get('/ticket/get/all', { params: params })
         .then((response) => {
             console.log(response.data.data)
             onSuccess(response.data.data);
@@ -53,10 +55,10 @@ const getAllTickets = ( page, onSuccess, onError) => {
         });
 };
 
-const getAllCancelTickets = ( page, onSuccess, onError) => {
+const getAllCancelTickets = ( params, onSuccess, onError) => {
     console.log("=====================================================")
     console.log(`Fetching all cancelable tickets`)
-    api.get('/ticket/get/cancelable', { params: { page } })
+    api.get('/ticket/get/cancelable', { params: params })
         .then((response) => {
             console.log(response.data.data)
             onSuccess(response.data.data);

@@ -39,6 +39,7 @@ const Login = ({ setIsAuthenticated, setUserAdmin }) => {
   };
 
   const onErrorFunction = (error) => {
+    console.log(error)
     if (infoMessage !== '') {
       setInfoMessage('')
       Cookies.remove('registered')
@@ -55,8 +56,8 @@ const Login = ({ setIsAuthenticated, setUserAdmin }) => {
         setErrorMessage(networkError);
         setIsAuthenticated(false)
         setUserAdmin(false)
-      } else if (error.response !== undefined && error.response.errorMessages !== null) {
-        setErrorMessage("Invalid username or password!");
+      } else if (error.response !== undefined && error.response.data!==undefined && error.response.data.errorMessages !== null) {
+        setErrorMessage(error.response.data.errorMessages[0]);
       } else {
         console.log(error)
       }

@@ -31,7 +31,7 @@ const UserTable = ({ userList, onRowClick }) => {
                             <td className='d-none d-md-table-cell'>{user.name}</td>
                             <td className='d-none d-md-table-cell'>{user.surname}</td>
                             <td>{user.email}</td>
-                            <td className='d-none d-md-table-cell'>{user.balance}</td>
+                            <td className='d-none d-md-table-cell'>{user.balance.toFixed(2)}</td>
                         </tr>
                     ))}
                 </tbody>

@@ -22,9 +22,11 @@ const AdminBody = ({ setIsAuthenticated }) => {
     const [errorMessages, setErrorMessages] = useState([]);
     const [infoMessages, setInfoMessages] = useState([]);
     const [userFilterField, setUserFilterField] = useState('');
+    const [cancelTicketFilterField, setCancelTicketFilterField] = useState('');
 
     useEffect(() => {
         UserService.getAllUsers(firstPage, onSuccessAllUsers, onError);
+        addInfoMessages(["Successfully played Ticket!"])
     }, [])
 
     const showUserInformation = (username) => {
@@ -35,6 +37,15 @@ const AdminBody = ({ setIsAuthenticated }) => {
 
     const fetchNewFixturesApiCall = () => {
         FixtureService.getNewFixtures(onSuccessFetchNewFixtures, onError);
+    }
+
+    const setUsernameFilter = () => {
+        if (document.getElementById(cancelTicketFilterField) !== null) {
+            const usernameValue = document.getElementById(cancelTicketFilterField).value;
+            if (usernameValue !== undefined && usernameValue !== null && usernameValue.length !== 0) {
+                setCancelTicketFilterField(usernameValue)
+            }
+        }
     }
 
     const updateTicketsApiCall = () => {
@@ -57,7 +68,7 @@ const AdminBody = ({ setIsAuthenticated }) => {
         }
     }
 
-    const onSuccessUpdateTicketsApiCall = (data) =>{
+    const onSuccessUpdateTicketsApiCall = (data) => {
         onSuccessApiCall(data)
         setRerender(prevCount => prevCount + 1);
     }
@@ -143,7 +154,7 @@ const AdminBody = ({ setIsAuthenticated }) => {
                             type="text"
                             className="form-control fs-6 h-100"
                             placeholder="Filter by username"
-                            value = {userFilterField}
+                            value={userFilterField}
                             name="userFilterField"
                             onChange={handleInputChange}
                         />
@@ -159,15 +170,28 @@ const AdminBody = ({ setIsAuthenticated }) => {
 
             <div className='rounded_border mt-5 p-3 p-md-5'>
                 <div className='fs-2 p-3 text-center'>Cancelable Tickets</div>
+                <div className='d-flex justify-content-center align-items-center'>
+                    <div className='col-6 col-md-4 m-3'>
+                        <input
+                            type="text"
+                            className="form-control fs-6 h-100"
+                            placeholder="Filter by username"
+                            id="cancelTicketFilterField"
+                        />
+                    </div>
+                    <div className='col-4'>
+                        <button className=" h-100 w-100 p-1 blue_button" onClick={setUsernameFilter}>FILTER</button>
+                    </div>
+                </div>
                 <div className=' pt-3 '>
-                    <CancelTickets addInfoMessages={addInfoMessages} onError={onError} />
+                    <CancelTickets username={cancelTicketFilterField} addInfoMessages={addInfoMessages} onError={onError} />
                 </div>
             </div>
 
             <div className='rounded_border mt-5 p-3 p-md-5'>
                 <div className='fs-2 text-center'>All Tickets</div>
-                <div  className=' pt-3 '>
-                    <UserTickets key = {rerender} onError={onError}/>
+                <div className=' pt-3 '>
+                    <UserTickets key={rerender} onError={onError} />
                 </div>
             </div>
 
