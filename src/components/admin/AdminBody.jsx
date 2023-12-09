@@ -26,7 +26,6 @@ const AdminBody = ({ setIsAuthenticated }) => {
 
     useEffect(() => {
         UserService.getAllUsers(firstPage, onSuccessAllUsers, onError);
-        addInfoMessages(["Successfully played Ticket!"])
     }, [])
 
     const showUserInformation = (username) => {
