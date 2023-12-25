@@ -24,6 +24,7 @@ const User = ({ setIsAuthenticated }) => {
         } else if (data.response !== undefined && data.response.data !== undefined && data.response.data.errorMessages !== undefined) {
             if (!JSON.stringify(data.response).includes('Insufficient funds')
                 && !JSON.stringify(data.response).includes('Invalid Email address')
+                && !JSON.stringify(data.response).includes('Deposit amount is missing')
                 && !JSON.stringify(data.response).includes('Unable to update user')) {
                 setIsAuthenticated(false)
             }
